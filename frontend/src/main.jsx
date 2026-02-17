@@ -8,6 +8,9 @@ const router = createBrowserRouter([
     path: "/",
     element: <CodePage />,
   },
+  {
+    path: "/settings",
+  },
 ]);
 
 createRoot(document.getElementById("root")).render(
