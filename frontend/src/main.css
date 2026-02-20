@@ -1,1 +1,5 @@
 @import "tailwindcss";
+
+.no-style {
+    all: unset;
+}
