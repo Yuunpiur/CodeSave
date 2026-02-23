@@ -39,75 +39,14 @@ const DropDownMenu = () => {
         </button>
         {activateMenu ? (
           <div className="menu w-25 h-125 absolute bg-white left-0 top-full border border-black rounded-[10px] flex flex-col overflow-y-auto">
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              C++
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Python
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
-            <button className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer">
-              Java
-            </button>
+            {programmingLanguages.map((element, index) => (
+              <button
+                className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer"
+                key={index}
+              >
+                {element}
+              </button>
+            ))}
           </div>
         ) : null}
       </div>

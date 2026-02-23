@@ -19,7 +19,7 @@ const CodePage = () => {
             <input
               className="code-link bg-[#D8D8D8] rounded-[50px] h-full p-4 w-125 text-gray-500 jersey-25-regular"
               type="text"
-              value={"Type something for the link to appear..."}
+              value={"Type in the editor for the link to appear..."}
             />
           </div>
           <div className="code-editor  bg-white  rounded-[15px] h-[90%] w-full"></div>
