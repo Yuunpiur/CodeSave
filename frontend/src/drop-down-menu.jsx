@@ -4,6 +4,8 @@ import { useState } from "react";
 
 const DropDownMenu = () => {
   const [activateMenu, setActivateMenu] = useState(false);
+  const [chosenProgrammingLanguage, setChosenProgrammingLanguage] =
+    useState("C++");
   const programmingLanguages = [
     "JavaScript",
     "Python",
@@ -43,6 +45,9 @@ const DropDownMenu = () => {
               <button
                 className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer"
                 key={index}
+                onClick={(event) =>
+                  setChosenProgrammingLanguage(event.target.innerText)
+                }
               >
                 {element}
               </button>
