@@ -1,8 +1,24 @@
 import "./main.css";
 import "./drop-down-menu";
 import DropDownMenu from "./drop-down-menu";
+import { useEffect, useState } from "react";
+import { codeToHtml } from "shiki";
 
 const CodePage = () => {
+  const [highlightedText, setHighlightedSyntax] = useState("");
+  useEffect(() => {
+    const code = "const a = 1";
+    const convertTextToHighlightedJavaScriptCode = async () => {
+      const html = await codeToHtml(code, {
+        lang: "javascript",
+        theme: "andromeeda",
+      });
+      setHighlightedSyntax(html);
+    };
+
+    convertTextToHighlightedJavaScriptCode();
+  }, []);
+
   return (
     <div class="parent-container w-screen h-screen bg-[#2B303A]">
       <div className="header w-full h-[7%] bg-[#D64933] mb-5">
@@ -22,7 +38,9 @@ const CodePage = () => {
               value={"Type in the editor for the link to appear..."}
             />
           </div>
-          <div className="code-editor  bg-white  rounded-[15px] h-[90%] w-full"></div>
+          <div className="code-editor  bg-white  rounded-[15px] h-[90%] w-full">
+            highlightedText
+          </div>
         </div>
 
         <div className="version-history h-full w-[20%]">
@@ -31,10 +49,42 @@ const CodePage = () => {
               SAVE
             </button>
           </div>
-          <div className="all-versions bg-[#7C7C7C] rounded-[15px] h-[90%]">
-            <div className="version-1">
-              <div className="version-name"></div>
-              <div className="created-date"></div>
+          <div className="all-versions bg-[#7C7C7C] rounded-[15px] h-[90%] overflow-y-auto jersey-25-regular ">
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
+            </div>
+            <div className="version-1 w-60 h-40 m-auto bg-white my-5 rounded-[15px] cursor-pointer flex flex-col justify-center items-center">
+              <div className="version-name text-4xl">Version 1</div>
+              <div className="created-date">January 25 2026</div>
             </div>
           </div>
         </div>

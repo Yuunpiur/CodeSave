@@ -32,7 +32,7 @@ const DropDownMenu = () => {
   return (
     <>
       <div className="language-picker bg-[#EEE5E9] rounded-[50px] pr-1  h-full w-25 pl-2  jersey-25-regular flex items-center justify-around relative">
-        <p>Language</p>
+        <p>{chosenProgrammingLanguage}</p>
         <button
           className="cursor-pointer"
           onClick={() => setActivateMenu(!activateMenu)}
