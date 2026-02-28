@@ -2,36 +2,15 @@ import { IoMdArrowDropdown } from "react-icons/io";
 import "./main.css";
 import { useState } from "react";
 
-const DropDownMenu = () => {
+const DropDownMenu = ({ sendDataToParent }) => {
   const [activateMenu, setActivateMenu] = useState(false);
   const [chosenProgrammingLanguage, setChosenProgrammingLanguage] =
     useState("C++");
-  const programmingLanguages = [
-    "JavaScript",
-    "Python",
-    "Java",
-    "C",
-    "C++",
-    "C#",
-    "TypeScript",
-    "Ruby",
-    "PHP",
-    "Swift",
-    "Kotlin",
-    "Go",
-    "Rust",
-    "R",
-    "Scala",
-    "Dart",
-    "Perl",
-    "Haskell",
-    "Lua",
-    "MATLAB",
-  ];
+  const programmingLanguages = ["JavaScript", "Python", "Java", "C", "C++"];
 
   return (
     <>
-      <div className="language-picker bg-[#EEE5E9] rounded-[50px] pr-1  h-full w-25 pl-2  jersey-25-regular flex items-center justify-around relative">
+      <div className="language-picker bg-[#EEE5E9] rounded-[50px] pr-1  h-full w-25 pl-2  jersey-25-regular flex items-center justify-around relative z-999">
         <p>{chosenProgrammingLanguage}</p>
         <button
           className="cursor-pointer"
@@ -45,9 +24,10 @@ const DropDownMenu = () => {
               <button
                 className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer"
                 key={index}
-                onClick={(event) =>
-                  setChosenProgrammingLanguage(event.target.innerText)
-                }
+                onClick={(event) => {
+                  setChosenProgrammingLanguage(event.target.innerText);
+                  sendDataToParent(event.target.innerText);
+                }}
               >
                 {element}
               </button>

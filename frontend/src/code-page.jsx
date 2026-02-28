@@ -2,22 +2,14 @@ import "./main.css";
 import "./drop-down-menu";
 import DropDownMenu from "./drop-down-menu";
 import { useEffect, useState } from "react";
-import { codeToHtml } from "shiki";
+import Editor from "@monaco-editor/react";
 
 const CodePage = () => {
-  const [highlightedText, setHighlightedSyntax] = useState("");
-  useEffect(() => {
-    const code = "const a = 1";
-    const convertTextToHighlightedJavaScriptCode = async () => {
-      const html = await codeToHtml(code, {
-        lang: "javascript",
-        theme: "andromeeda",
-      });
-      setHighlightedSyntax(html);
-    };
+  const [programmingLanguage, setProgrammingLanguage] = useState("c++");
 
-    convertTextToHighlightedJavaScriptCode();
-  }, []);
+  const sendDataToCallBackUseStateVariable = (programmingLanguage) => {
+    setProgrammingLanguage(programmingLanguage.toLowerCase());
+  };
 
   return (
     <div class="parent-container w-screen h-screen bg-[#2B303A]">
@@ -31,15 +23,22 @@ const CodePage = () => {
       <div className="main  flex flex-row justify-around items-center p-3 h-[90%] w-full">
         <div className="code-space h-full w-[70%]">
           <div className="code-space-header m-2 h-[5%] w-full flex gap-8">
-            <DropDownMenu />
+            <DropDownMenu
+              sendDataToParent={sendDataToCallBackUseStateVariable}
+            />
             <input
               className="code-link bg-[#D8D8D8] rounded-[50px] h-full p-4 w-125 text-gray-500 jersey-25-regular"
               type="text"
               value={"Type in the editor for the link to appear..."}
             />
           </div>
-          <div className="code-editor  bg-white  rounded-[15px] h-[90%] w-full">
-            highlightedText
+          <div className="code-editor rounded-[15px] h-[90%] w-full">
+            <Editor
+              className="w-full"
+              language={programmingLanguage}
+              defaultValue="const a = 1;"
+              theme="vs-dark"
+            />
           </div>
         </div>
 
