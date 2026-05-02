@@ -6,10 +6,11 @@ export const sendDataToCallBackUseStateVariable = (programmingLanguage, setProgr
 // ! DEBOUNCE
 export const debounceBlock = (delay) => {
     let timerID;
-    return (value, setSourceCode) => {
+    return (value, setSourceCode, setCodeIsSaved) => {
         clearTimeout(timerID);
         timerID = setTimeout(() => {
             setSourceCode(value);
+            setCodeIsSaved(true);
         }, delay);
     };
 };
@@ -48,6 +49,7 @@ export const copyLink = async (copyIconPressed, setCopyIconPressed, codeURL) => 
 export const checkSourceCode = (sourceCode, setSaveButtonState, savingLimitReached, linkID) => {
     const IS_EMPTY = "";
     if (sourceCode == IS_EMPTY || savingLimitReached || linkID == IS_EMPTY) {
+        console.log("TRUE");
         setSaveButtonState(true); // disable the button if the editory is empty
     } else {
         setSaveButtonState(false);
@@ -59,6 +61,7 @@ export const disableButtonForTenSeconds = (setSaveButtonState, setSavingLimitRea
     setSavingLimitReached(true)
     setSaveButtonState(true);
     setTimeout(() => {
+        setSavingLimitReached(false);
         setSaveButtonState(false);
     }, 10000)
 };

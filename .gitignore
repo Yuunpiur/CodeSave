@@ -28,6 +28,7 @@ dist
 dist-ssr
 *.local
 ca.pem 
+psue.md
 
 
 =======

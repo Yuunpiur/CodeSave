@@ -34,6 +34,8 @@ const CodePage = () => {
   const [savingLimitReached, setSavingLimitReached] = useState(false);
   const [saveButtonIsPressed, setSaveButtonIsPressed] = useState(false);
   const [versionName, setVersionName] = useState("");
+  const [codeIsSaved, setCodeIsSaved] = useState(true); // cause code is not saved when the the setTimeout block is not yet executed
+  const [versionBlocks, setVersionBlocks] = useState([]);
 
   const options = {
     fontFamily: "'JetBrains Mono', Consolas, 'Courier New', monospace",
@@ -65,7 +67,9 @@ const CodePage = () => {
   }, [sourceCode, id]);
 
   useEffect(() => {
-    fetchVersionBlocks(id);
+    if (id) {
+      fetchVersionBlocks(id, setVersionBlocks);
+    }
   }, [id]);
 
   const debounceFunction = debounceBlock(2000);
@@ -121,7 +125,8 @@ const CodePage = () => {
                 onChange={(value) => {
                   console.log(value);
                   console.log(saveButtonState);
-                  debounceFunction(value, setSourceCode);
+
+                  debounceFunction(value, setSourceCode, setCodeIsSaved);
                 }}
                 options={options}
               />
@@ -140,18 +145,27 @@ const CodePage = () => {
               </button>
             </div>
             <div className="all-versions bg-[#181818] border border-white/10 rounded-[14px] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
-              <div className="version-card w-full bg-[#242424] hover:bg-[#2a2a2a] border border-white/10 hover:border-white/20 transition-all duration-150 rounded-lg cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0">
-                <div className="version-name text-[#E8E5DC] jersey-25-regular text-[15px] md:text-[17px] tracking-wide">
-                  Version 1
-                </div>
-                <div className="created-date-time text-[#C5A882]/50 jersey-25-regular text-[11px] tracking-[0.14em] uppercase mt-1">
-                  2026-04-18 23:55:38
-                </div>
-              </div>
+              {versionBlocks.length > 0
+                ? versionBlocks.map((versionInfo) => {
+                    return (
+                      <div
+                        className="version-card w-full bg-[#242424] hover:bg-[#2a2a2a] border border-white/10 hover:border-white/20 transition-all duration-150 rounded-lg cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0"
+                        key={versionInfo.ver_id}
+                      >
+                        <div className="version-name text-[#E8E5DC] jersey-25-regular text-[15px] md:text-[17px] tracking-wide">
+                          {versionInfo.ver_name}
+                        </div>
+                        <div className="created-date-time text-[#C5A882]/50 jersey-25-regular text-[11px] tracking-[0.14em] uppercase mt-1">
+                          {versionInfo.created_at}
+                        </div>
+                      </div>
+                    );
+                  })
+                : null}
             </div>
           </div>
         </div>
-
+        {/* ! THIS IS THE POP UP */}
         {saveButtonIsPressed ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-1000 px-4">
             <div className="w-full max-w-85 bg-[#181818] border border-white/10 rounded-[14px] overflow-hidden">
@@ -204,7 +218,14 @@ const CodePage = () => {
                       setSavingLimitReached,
                     );
 
-                    saveVersion(versionName, id, saveButtonState);
+                    saveVersion(
+                      sourceCode,
+                      versionName,
+                      id,
+                      saveButtonState,
+                      versionBlocks,
+                      setVersionBlocks,
+                    );
                   }}
                 >
                   Save
