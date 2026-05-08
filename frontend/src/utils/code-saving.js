@@ -1,3 +1,5 @@
+
+
 // !
 export const createNewCodeInfo = async (setLinkID, sourceCode, programmingLanguage) => {
     try {
@@ -11,7 +13,7 @@ export const createNewCodeInfo = async (setLinkID, sourceCode, programmingLangua
         };
 
         const result = await fetch(
-            "http://localhost:8000/code/create-code-info",
+            `http://${import.meta.env.VITE_BACKEND_URL}/code/create-code-info`,
             requestOptions,
         );
 
@@ -23,19 +25,19 @@ export const createNewCodeInfo = async (setLinkID, sourceCode, programmingLangua
 };
 
 // !
-export const fetchSourceCodeInfo = async (id, setSourceCode, setProgrammingLanguage) => {
+export const fetchSourceCodeInfo = async (id, setSourceCode, setProgrammingLanguage, setLiveSourceCode) => {
     try {
-        console.log("FETCH");
         const requestOptions = {
             method: "POST",
             body: JSON.stringify({ id: id }),
             headers: { "Content-Type": "application/json" },
         };
         const data = await fetch(
-            "http://localhost:8000/code/fetch-source-code",
+            `http://${import.meta.env.VITE_BACKEND_URL}/code/fetch-source-code`,
             requestOptions,
         );
         const sourceCodeInfo = await data.json();
+        setLiveSourceCode(sourceCodeInfo.sourceCode);
         setSourceCode(sourceCodeInfo.sourceCode);
         setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
     } catch (error) {
@@ -51,11 +53,34 @@ export const updateSourceCodeInfo = async (sourceCode, id) => {
             body: JSON.stringify({ sourceCode: sourceCode, linkID: id }),
             headers: { "Content-Type": "application/json" },
         };
-        await fetch("http://localhost:8000/code/update-source-code", requestOptions);
+        await fetch(`http://${import.meta.env.VITE_BACKEND_URL}/code/update-source-code`, requestOptions);
     } catch (error) {
         console.error(error);
     }
 };
+
+
+export const checkIfIDExists = async (id) => {
+    try {
+        const requestOptions = {
+            method: "POST",
+            body: JSON.stringify({ id: id }),
+            headers: { "Content-Type": "application/json" },
+        };
+
+        const data = await fetch(
+            `http://${import.meta.env.VITE_BACKEND_URL}/code/check-id-exist`,
+            requestOptions,
+        );
+        const IDExist = await data.json();
+        return IDExist.linkIDExist;
+    }
+    catch (error) {
+
+        console.error(error);
+
+    }
+}
 
 
 

@@ -4,6 +4,9 @@ overall-plan.md
 user-accounts.md 
 ca.pem
 .env
+**/.env
+backend/.env
+frontend/.env
 node_modules
 
 # Logs

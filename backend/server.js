@@ -1,27 +1,29 @@
 import express from "express";
 import "dotenv/config";
 import cors from "cors";
-import mysql from "mysql2/promise";
+import pg from "pg"
 import saveVersionCodeRouter from "./save-version-db.js";
 import saveCodeRouter from "./save-code-db.js";
 const app = express();
 
 app.use(cors({
     origin: ["http://localhost:5173"],
-    methods: ["PUT", "GET", "OPTIONS"],
+    methods: ["PUT", "GET", "OPTIONS", "DELETE"],
     credentials: true,
     allowedHeaders: ["Content-Type"]
 }));
 
 app.use(express.json());
 
-export const db = mysql.createPool({
-    host: process.env.LOCAL_MYSQL_HOST,
-    user: process.env.LOCAL_MYSQL_USER,
-    password: process.env.LOCAL_MYSQL_PASSWORD,
-    database: process.env.LOCAL_MYSQL_DB_NAME,
-    waitForConnections: true,
-    connectionLimit: 10
+
+const { Pool } = pg;
+
+export const db = new Pool({
+    host: process.env.DB_HOST,         // where your database lives, e.g. 'localhost'
+    port: process.env.DB_PORT,         // postgres port, default is 5432
+    user: process.env.DB_USER,         // your postgres username, e.g. 'postgres'
+    password: process.env.DB_PASSWORD, // your postgres password you set during install
+    database: process.env.DB_NAME,
 });
 
 

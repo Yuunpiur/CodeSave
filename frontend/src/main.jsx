@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import CodePage from "./code-page";
+import NotFound from "./not-found";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
   },
   {
     path: "/settings",
+  },
+  {
+    path: "/not-found",
+    element: <NotFound />,
   },
 ]);
 
