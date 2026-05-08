@@ -79,7 +79,7 @@ const CodePage = () => {
   }, [sourceCode]);
 
   useEffect(() => {
-    setCodeURL(`http://${import.meta.env.VITE_FRONTEND_URL}/${id}`);
+    setCodeURL(`${import.meta.env.VITE_FRONTEND_URL}${id}`);
     if (id && (sourceCode == "" || sourceCode == undefined)) {
       (async () => {
         await fetchSourceCodeInfo(

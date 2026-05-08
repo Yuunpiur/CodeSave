@@ -23,11 +23,11 @@ RANDOM PROBLEMS
 - disable save button when clicking a version block
 
 SHIPPING IT
--LOCAL
--change all hardcoded urls
 
 -VERCEL
 
 - environment variables
 
 -SUPABASE
+
+- connect supabase

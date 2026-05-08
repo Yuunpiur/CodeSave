@@ -17,7 +17,7 @@ export const debounceBlock = (delay) => {
 
 // ! SAVING LINK TO CLIPBOARD
 export const copyLink = async (copyIconPressed, setCopyIconPressed, codeURL) => {
-    if (!copyIconPressed && codeURL != `http://${import.meta.env.VITE_FRONTEND_URL}/`) {
+    if (!copyIconPressed && codeURL != `${import.meta.env.VITE_FRONTEND_URL}`) {
         const copyIcon = document.querySelector(".copy-icon");
         const checkIcon = document.querySelector(".check-icon");
 

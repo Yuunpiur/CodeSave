@@ -13,7 +13,7 @@ export const createNewCodeInfo = async (setLinkID, sourceCode, programmingLangua
         };
 
         const result = await fetch(
-            `http://${import.meta.env.VITE_BACKEND_URL}/code/create-code-info`,
+            `${import.meta.env.VITE_BACKEND_URL}code/create-code-info`,
             requestOptions,
         );
 
@@ -33,7 +33,7 @@ export const fetchSourceCodeInfo = async (id, setSourceCode, setProgrammingLangu
             headers: { "Content-Type": "application/json" },
         };
         const data = await fetch(
-            `http://${import.meta.env.VITE_BACKEND_URL}/code/fetch-source-code`,
+            `${import.meta.env.VITE_BACKEND_URL}code/fetch-source-code`,
             requestOptions,
         );
         const sourceCodeInfo = await data.json();
@@ -53,7 +53,7 @@ export const updateSourceCodeInfo = async (sourceCode, id) => {
             body: JSON.stringify({ sourceCode: sourceCode, linkID: id }),
             headers: { "Content-Type": "application/json" },
         };
-        await fetch(`http://${import.meta.env.VITE_BACKEND_URL}/code/update-source-code`, requestOptions);
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}code/update-source-code`, requestOptions);
     } catch (error) {
         console.error(error);
     }
@@ -69,7 +69,7 @@ export const checkIfIDExists = async (id) => {
         };
 
         const data = await fetch(
-            `http://${import.meta.env.VITE_BACKEND_URL}/code/check-id-exist`,
+            `${import.meta.env.VITE_BACKEND_URL}code/check-id-exist`,
             requestOptions,
         );
         const IDExist = await data.json();
