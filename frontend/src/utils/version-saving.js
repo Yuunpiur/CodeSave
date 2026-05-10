@@ -7,7 +7,7 @@ export const saveVersion = async (sourceCode, versionName, linkID, saveButtonSta
             headers: { "Content-Type": "application/json" },
         };
 
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}version/save-version`, requestOptions);
+        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/save-version`, requestOptions);
         const versionInfo = await result.json();
         if (versionInfo.length > 0) {
             setVersionBlocks([...versionBlocks, versionInfo])
@@ -26,7 +26,7 @@ export const fetchVersionBlocks = async (id, setVersionBlocks) => {
             body: JSON.stringify({ linkID: id }),
             headers: { "Content-Type": "application/json" },
         };
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}version/fetch-version-blocks`, requestOptions);
+        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-version-blocks`, requestOptions);
         const versionBlocks = await result.json();
         setVersionBlocks(versionBlocks);
     }
@@ -43,7 +43,7 @@ export const fetchVersionBlockSourceCode = async (linkID, versionID, setSourceCo
             body: JSON.stringify({ linkID: linkID, versionID: versionID }),
             headers: { "Content-Type": "application/json" },
         };
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}version/fetch-version-block-source-code`, requestOptions);
+        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-version-block-source-code`, requestOptions);
         const [sourceCode] = await result.json();
 
 
@@ -61,7 +61,7 @@ export const deleteVersionBlock = async (verID) => {
     try {
         console.log(verID);
 
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}version/delete-version-block/${verID}`, { method: "DELETE" });
+        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/delete-version-block/${verID}`, { method: "DELETE" });
     }
     catch (error) {
         console.error(error);

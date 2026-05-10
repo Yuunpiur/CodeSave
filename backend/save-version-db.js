@@ -28,7 +28,6 @@ router.post("/save-version", async (req, res) => {
         // receive the data from db
         // query db to get all version info about linkID
         const versionInfo = await db.query("SELECT ver_name, ver_id, created_at FROM USER_CODE_VERSIONS_INFO WHERE $1 = ver_id", [ver_id]);
-        console.log(versionInfo);
         const date = versionInfo.rows[0].created_at;
         const formattedDate = new Intl.DateTimeFormat("en-US", {
             dateStyle: "medium",

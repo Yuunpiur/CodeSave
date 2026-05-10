@@ -31,6 +31,6 @@ app.listen(process.env.PORT, () => {
     console.log("SERVER IS RUNNING");
 })
 
-app.use("/code", saveCodeRouter);
-app.use("/version", saveVersionCodeRouter);
+app.use("/api/code", saveCodeRouter);
+app.use("/api/version", saveVersionCodeRouter);
 
