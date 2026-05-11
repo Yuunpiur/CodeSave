@@ -4,7 +4,7 @@ import { db } from "./server.js";
 import express from "express";
 const router = express.Router();
 
-router.post(('/api/code/create-code-info'), async (req, res) => {
+router.post(('/create-code-info'), async (req, res) => {
     try {
         // Get the data from the front end
         const { sourceCode, programmingLanguage } = req.body;
