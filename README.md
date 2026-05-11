@@ -5,6 +5,7 @@ A full-stack web application for saving, managing, and sharing code snippets wit
 ## 📋 Overview
 
 CodeSave is a modern code editor platform that allows developers to:
+
 - Write and edit code with syntax highlighting across multiple programming languages
 - Save code snippets with version history tracking
 - Generate shareable links for easy collaboration
@@ -14,6 +15,7 @@ CodeSave is a modern code editor platform that allows developers to:
 ## 🏗️ Architecture
 
 ### Frontend
+
 - **Framework**: React 19 with Vite (build tool)
 - **Editor**: Monaco Editor for code editing with syntax highlighting
 - **Styling**: Tailwind CSS 4
@@ -22,6 +24,7 @@ CodeSave is a modern code editor platform that allows developers to:
 - **Utilities**: Debouncing for performance optimization
 
 ### Backend
+
 - **Runtime**: Node.js with ES modules
 - **Server**: Express.js
 - **Database**: PostgreSQL with pg driver
@@ -58,77 +61,23 @@ CodeSave/
 
 ```
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Node.js (v16 or higher)
-- PostgreSQL database
-
-### Installation
-
-#### Backend Setup
-```bash
-cd backend
-npm install
-```
-
-Create a `.env` file in the backend directory:
-```env
-PORT=5000
-FRONTEND_URL=http://localhost:5173
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=your_postgres_user
-DB_PASSWORD=your_postgres_password
-DB_NAME=codesave
-```
-
-#### Frontend Setup
-```bash
-cd frontend
-npm install
-```
-
-### Running the Application
-
-#### Start Backend
-```bash
-cd backend
-npm start
-```
-The server will start with file watching enabled (hot reload).
-
-#### Start Frontend
-```bash
-cd frontend
-npm run dev
-```
-The development server will run at `http://localhost:5173`.
-
-### Build for Production
-```bash
-# Frontend
-cd frontend
-npm run build
-
-# Preview production build
-npm run preview
-```
-
 ## 🔑 Key Features
 
 ### Code Editor
+
 - **Monaco Editor Integration**: Professional code editing experience
 - **Multi-language Support**: Syntax highlighting for multiple programming languages
 - **Real-time Saving**: Debounced auto-save functionality
 - **Copy Link**: Share code snippets with unique shareable links
 
 ### Version Control
+
 - **Version History**: Track all saved versions of your code
 - **Version Management**: View, restore, and delete versions
 - **Snapshot Preservation**: Each version captures a complete snapshot of code
 
 ### Collaboration
+
 - **Shareable Links**: Generate unique URLs to share code snippets
 - **Read-only Mode**: View-only access for shared code
 - **Link-based Access**: Access code by ID from URL parameters
@@ -136,17 +85,20 @@ npm run preview
 ## 📝 Scripts
 
 ### Frontend
+
 - `npm run dev` - Start development server
 - `npm run build` - Build for production
 - `npm run lint` - Run ESLint
 - `npm run preview` - Preview production build
 
 ### Backend
+
 - `npm start` - Start server with file watching
 
 ## 🛠️ Technologies Used
 
 ### Frontend
+
 - React 19.2.0
 - Vite 8.0.0-beta.13
 - Tailwind CSS 4.2.0
@@ -157,6 +109,7 @@ npm run preview
 - use-debounce 10.1.0
 
 ### Backend
+
 - Express.js 5.2.1
 - PostgreSQL (pg 8.20.0)
 - CORS 2.8.6
@@ -166,9 +119,11 @@ npm run preview
 ## 📂 API Endpoints
 
 ### Code Management
+
 - `GET/PUT/DELETE /api/code` - Code CRUD operations
 
 ### Version Management
+
 - `GET/PUT/DELETE /api/version` - Version history operations
 
 ## 🔍 Routing
@@ -181,6 +136,7 @@ npm run preview
 ## ⚙️ Environment Variables
 
 ### Backend (.env)
+
 ```env
 PORT                # Server port (default: 5000)
 FRONTEND_URL        # Frontend URL for CORS
@@ -194,6 +150,7 @@ DB_NAME             # PostgreSQL database name
 ## 🐛 Known Issues & TODO
 
 ### Current Issues
+
 - Version block UI improvements needed
 - Code disappearing on first version save
 - Tab exit handling improvements
@@ -201,6 +158,7 @@ DB_NAME             # PostgreSQL database name
 - Debounce timing optimization
 
 ### Future Enhancements
+
 - Enhanced security measures
 - Improved scalability
 - Settings page implementation
@@ -209,12 +167,14 @@ DB_NAME             # PostgreSQL database name
 ## 📖 Development Notes
 
 ### Code Structure
+
 - Frontend uses React Hooks for state management
 - Debouncing implemented for auto-save performance
 - Backend routes organized by functionality
 - Database interactions handled through pg driver
 
 ### Performance Considerations
+
 - Debounce timing on code changes to reduce unnecessary saves
 - useQuery for efficient data fetching
 - Vite's fast hot module replacement for development
