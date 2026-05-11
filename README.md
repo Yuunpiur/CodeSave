@@ -132,5 +132,3 @@ CodeSave/
 - `/:id` - Access code by unique ID
 - `/settings` - Application settings (in development)
 - `/not-found` - 404 page
-
-## ⚙️ Environment Variables
