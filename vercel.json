@@ -1,8 +1,8 @@
 {
     "rewrites": [
         {
-            "source": "/api/(.*)",
-            "destination": "/backend/server.js"
+            "source": "/api/code/create-code-info",
+            "destination": "/backend/save-code-db.js"
         }
     ]
 }
