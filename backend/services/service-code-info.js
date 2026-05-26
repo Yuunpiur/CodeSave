@@ -1,88 +1,60 @@
 import { nanoid } from "nanoid";
-import { db } from "./config/db.js";
-import express from "express";
-import { hashSourceCode } from "./utils/crypto-utils.js";
-const router = express.Router();
+import { hashSourceCode } from "../utils/crypto-utils.js";
+import { db } from "../config/db.js";
 
-
-router.post(('/add-source-code-info'), async (req, res) => {
+export const addSourceCodeInfo = async (codeEditorSourceCode, programmingLanguage) => {
     try {
-        const { codeEditorSourceCode, programmingLanguage } = req.body;
         const sourceCodeInfoID = nanoid(12);
-
-
         const hashedSourceCode = hashSourceCode(codeEditorSourceCode);
         const insertQueryResult = await db.query("INSERT INTO USER_SOURCECODE_INFO (link_id, source_code, programming_language, code_hash) VALUES($1, $2, $3, $4)", [sourceCodeInfoID, codeEditorSourceCode, programmingLanguage, hashedSourceCode]);
 
-        res.json({ sourceCodeInfoID: sourceCodeInfoID });
+        return sourceCodeInfoID;
+
     }
     catch (error) {
-
         console.error(error);
-        res.status(500).json({ error: error });
     }
-},);
+}
 
-
-
-router.post("/fetch-source-code-info", async (req, res) => {
+export const fetchSourceCodeInfo = async (sourceCodeInfoID) => {
     try {
-        const { sourceCodeInfoID } = req.body;
         const selectQueryResult = await db.query("SELECT source_code AS \"codeEditorSourceCode\", programming_language AS \"programmingLanguage\" FROM USER_SOURCECODE_INFO WHERE link_id = $1", [sourceCodeInfoID]);
         const { codeEditorSourceCode, programmingLanguage } = selectQueryResult.rows[0];
-
-        res.json({ codeEditorSourceCode, programmingLanguage });
+        return { codeEditorSourceCode: codeEditorSourceCode, programmingLanguage: programmingLanguage };
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ error: error });
     }
-});
+}
 
-
-router.put("/update-source-code-info", async (req, res) => {
+export const updateSourceCodeInfo = async (codeEditorSourceCode, sourceCodeInfoID) => {
     try {
-        const { codeEditorSourceCode, sourceCodeInfoID } = req.body;
-
         const newHashedSourceCode = hashSourceCode(codeEditorSourceCode);
         const selectQueryResult = await db.query("SELECT code_hash AS \"oldHashedSourceCode\" FROM USER_SOURCECODE_INFO WHERE link_id = $1", [sourceCodeInfoID]);
         const { oldHashedSourceCode } = selectQueryResult.rows[0];
-
         if (newHashedSourceCode != oldHashedSourceCode) {
             const updateQueryResult = await db.query("UPDATE USER_SOURCECODE_INFO SET source_code = $1, code_hash = $2, updated_at = NOW() WHERE link_id = $3", [codeEditorSourceCode, newHashedSourceCode, sourceCodeInfoID])
         }
-
-        res.json({ status: "working" })
+        return { status: "working" };
     }
     catch (error) {
         console.error(error);
-        res.status(500).json({ error: error });
     }
-});
+}
 
-
-router.post("/check-id-exist", async (req, res) => {
-
+export const checkIDExist = async (sourceCodeInfoID) => {
     try {
-        const { sourceCodeInfoID } = req.body;
-
         const selectQueryResult = await db.query("SELECT link_id FROM USER_SOURCECODE_INFO WHERE link_id = $1", [sourceCodeInfoID]);
         const sourceCodeInfoIDExist = selectQueryResult.rows.length == 1;
-
         if (sourceCodeInfoIDExist) {
-            res.json({ IDExist: true });
+            return true;
         }
         else {
-            res.json({ IDExist: false });
+            return false;
         }
-
     }
-
     catch (error) {
         console.error(error);
-        res.status(404).send("Source Code Not Found");
     }
-})
+}
 
-
-export default router;

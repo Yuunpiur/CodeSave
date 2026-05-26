@@ -1,75 +1,81 @@
 import express from "express";
-import { db } from "./server.js";
+import { db } from "./config/db.js";
 import { version } from "react";
 import { nanoid } from "nanoid";
-import { createHash } from "crypto";
+import { hashSourceCode } from "./utils/crypto-utils.js";
 
 const router = express.Router();
 
-router.post("/save-version", async (req, res) => {
-    const { sourceCode, versionName, linkID } = req.body;
-    // ! versionname, source code, linkID, ver_hash 
-    // send the data to the backend
-    // hash the code
-    const hash_code = (source_code) => createHash("sha256").update(source_code).digest("hex");
-    const hashedCode = hash_code(sourceCode);
-    // compare hashes if it already exist
-    const versionHash = await db.query("SELECT ver_hash FROM USER_CODE_VERSIONS_INFO WHERE $1 = link_id AND $2 = ver_hash", [linkID, hashedCode]);
+router.post("/add-version-info", async (req, res) => {
+    try {
 
-    if (versionHash.rows.length === 0) {
+        const { codeEditorSourceCode, versionName, sourceCodeInfoID } = req.body;
+        const versionHashedSourceCode = hashSourceCode(codeEditorSourceCode);
+        const selectVersionHashResult = await db.query("SELECT ver_hash FROM USER_CODE_VERSIONS_INFO WHERE link_id = $1 AND ver_hash = $2", [sourceCodeInfoID, versionHashedSourceCode]);
 
+        const versionHashExist = selectVersionHashResult.rows.length == 1;
+        if (!versionHashExist) {
+            const versionInfoID = nanoid(8);
 
-        const ver_id = nanoid(8);
+            const insertVersionInfoResult = await db.query("INSERT INTO USER_CODE_VERSIONS_INFO(ver_id, link_id, source_code, ver_hash, ver_name) VALUES($1, $2, $3, $4, $5)", [versionInfoID, sourceCodeInfoID, codeEditorSourceCode, versionHashedSourceCode, versionName]);
 
+            const selectVersionInfoResult = await db.query("SELECT ver_name, ver_id, created_at FROM USER_CODE_VERSIONS_INFO WHERE $1 = ver_id", [versionInfoID]);
 
-        // query db by saving version block
-        const savingVersionInfoResult = await db.query("INSERT INTO USER_CODE_VERSIONS_INFO(ver_id, link_id, source_code, ver_hash, ver_name) VALUES($1, $2, $3, $4, $5)", [ver_id, linkID, sourceCode, hashedCode, versionName]);
+            const date = selectVersionInfoResult.rows[0].created_at;
+            const formattedDate = new Intl.DateTimeFormat("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+            }).format(date);
 
-        // receive the data from db
-        // query db to get all version info about linkID
-        const versionInfo = await db.query("SELECT ver_name, ver_id, created_at FROM USER_CODE_VERSIONS_INFO WHERE $1 = ver_id", [ver_id]);
-        const date = versionInfo.rows[0].created_at;
+            selectVersionInfoResult.rows[0].created_at = formattedDate;
+            return res.json(selectVersionInfoResult.rows[0]);
+        }
+        res.json({ message: "Version Already Exist" });
+    }
+    catch (error) {
+        console.error(error);
+    }
+});
+
+router.post(("/fetch-versions-details"), async (req, res) => {
+
+    const { sourceCodeInfoID } = req.body;
+    const selectQueryResult = await db.query("SELECT ver_name, ver_id, created_at FROM USER_CODE_VERSIONS_INFO WHERE $1 = link_id", [sourceCodeInfoID]);
+
+    const versionsInfo = selectQueryResult.rows;
+    // Format all the created_at column date times
+    for (let i = 0; i < versionsInfo.length; i++) {
+        const date = versionsInfo[i].created_at;
         const formattedDate = new Intl.DateTimeFormat("en-US", {
             dateStyle: "medium",
             timeStyle: "short",
         }).format(date);
-        versionInfo.rows[0].created_at = formattedDate;
-        res.json(versionInfo.rows[0]);
-        return;
+        versionsInfo[i].created_at = formattedDate;
     }
-
-    res.json({ message: "working" });
-});
-
-router.post(("/fetch-version-blocks"), async (req, res) => {
-
-    const { linkID } = req.body;
-    const versionBlocks = await db.query("SELECT ver_name, ver_id, created_at FROM USER_CODE_VERSIONS_INFO WHERE $1 = link_id", [linkID]);
-    // Format all the fetched created_at date time
-    for (let i = 0; i < versionBlocks.rows.length; i++) {
-        const date = versionBlocks.rows[i].created_at;
-        const formattedDate = new Intl.DateTimeFormat("en-US", {
-            dateStyle: "medium",
-            timeStyle: "short",
-        }).format(date);
-        versionBlocks.rows[i].created_at = formattedDate;
-    }
-    res.json(versionBlocks.rows);
+    res.json(versionsInfo);
 });
 
 
-router.post("/fetch-version-block-source-code", async (req, res) => {
-    const { linkID, versionID } = req.body;
-    const result = await db.query("SELECT source_code FROM USER_CODE_VERSIONS_INFO WHERE link_id = $1 AND ver_id = $2", [linkID, versionID]);
-
-    res.json(result.rows);
-})
-
-router.delete("/delete-version-block/:id", (req, res) => {
+router.post("/fetch-version-source-code", async (req, res) => {
 
     try {
-        const { id: verID } = req.params;
-        const result = db.query("DELETE FROM USER_CODE_VERSIONS_INFO WHERE ver_id = $1", [verID])
+        const { savedVersionInfoID } = req.body;
+        const selectQueryResult = await db.query("SELECT source_code FROM USER_CODE_VERSIONS_INFO WHERE ver_id = $1", [savedVersionInfoID]);
+
+        const versionSourceCode = selectQueryResult.rows;
+
+        res.json(versionSourceCode);
+
+    }
+    catch (error) {
+        console.error(error);
+    }
+})
+
+router.delete("/delete-version/:id", async (req, res) => {
+    try {
+        const { id: versionToDeleteID } = req.params;
+        const deleteQueryResult = await db.query("DELETE FROM USER_CODE_VERSIONS_INFO WHERE ver_id = $1", [versionToDeleteID])
         res.json({ message: "deleted successfully!" })
     }
     catch (error) {

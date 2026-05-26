@@ -1,34 +1,34 @@
-export const saveVersion = async (sourceCode, versionName, linkID, saveButtonState, versionBlocks, setVersionBlocks) => {
+export const addVersionInfo = async (codeEditorSourceCode, versionName, sourceCodeInfoID, saveVersionButtonDisabled) => {
     try {
-        if (saveButtonState) { return; }
+        if (saveVersionButtonDisabled) { return; }
         const requestOptions = {
             method: "POST",
-            body: JSON.stringify({ sourceCode: sourceCode, versionName: versionName, linkID: linkID }),
+            body: JSON.stringify({ codeEditorSourceCode: codeEditorSourceCode, versionName: versionName, sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
 
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/save-version`, requestOptions);
-        const versionInfo = await result.json();
-        if (versionInfo.length > 0) {
-            setVersionBlocks([...versionBlocks, versionInfo])
-        }
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/add-version-info`, requestOptions);
+        console.log(fetchResponse.status);
+        const versionInfo = await fetchResponse.json();
+
+        return versionInfo;
     }
     catch (error) {
         console.error(error);
     }
 }
 
-export const fetchVersionBlocks = async (id, setVersionBlocks) => {
+export const fetchVersionsDetails = async (sourceCodeInfoID) => {
     try {
-        console.log("FETCHING VERSION BLOCKS");
         const requestOptions = {
             method: "POST",
-            body: JSON.stringify({ linkID: id }),
+            body: JSON.stringify({ sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-version-blocks`, requestOptions);
-        const versionBlocks = await result.json();
-        setVersionBlocks(versionBlocks);
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-versions-details`, requestOptions);
+        const savedVersionsDetails = await fetchResponse.json();
+
+        return savedVersionsDetails;
     }
     catch (error) {
         console.error(error);
@@ -36,35 +36,28 @@ export const fetchVersionBlocks = async (id, setVersionBlocks) => {
 };
 
 
-export const fetchVersionBlockSourceCode = async (linkID, versionID, setSourceCode) => {
+export const fetchVersionSourceCode = async (savedVersionInfoID) => {
     try {
         const requestOptions = {
             method: "POST",
-            body: JSON.stringify({ linkID: linkID, versionID: versionID }),
+            body: JSON.stringify({ savedVersionInfoID: savedVersionInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-version-block-source-code`, requestOptions);
-        const [sourceCode] = await result.json();
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-version-source-code`, requestOptions);
+        const { versionSourceCode } = await fetchResponse.json();
 
-
-        setSourceCode(sourceCode.source_code);
-
-
+        return versionSourceCode;
     }
     catch (error) {
         console.error(error);
     }
-
 }
 
-export const deleteVersionBlock = async (verID) => {
+export const deleteVersion = async (versionToDeleteID) => {
     try {
-        console.log(verID);
-
-        const result = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/delete-version-block/${verID}`, { method: "DELETE" });
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/delete-version/${versionToDeleteID}`, { method: "DELETE" });
     }
     catch (error) {
         console.error(error);
     }
-
 };

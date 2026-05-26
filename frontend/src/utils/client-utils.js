@@ -6,11 +6,10 @@ export const sendDataToCallBackUseStateVariable = (programmingLanguage, setProgr
 // ! DEBOUNCE
 export const debounceBlock = (delay) => {
     let timerID;
-    return (value, setSourceCode, setCodeIsSaved) => {
+    return (value, setSourceCode) => {
         clearTimeout(timerID);
         timerID = setTimeout(() => {
             setSourceCode(value);
-            setCodeIsSaved(true);
         }, delay);
     };
 };
@@ -21,13 +20,12 @@ export const copyLink = async (copyIconPressed, setCopyIconPressed, codeURL) => 
         const copyIcon = document.querySelector(".copy-icon");
         const checkIcon = document.querySelector(".check-icon");
 
-        /* 
-                // Reset the button after 3 secs
-                setTimeout(() => {
-                    setCopyIconPressed(false); // make the button pressable again
-                    copyIcon.classList.remove("hidden");
-                    checkIcon.classList.toggle("hidden");
-                }, 3000); */
+
+        setTimeout(() => {
+            setCopyIconPressed(false); // make the button pressable again
+            copyIcon.classList.remove("hidden");
+            checkIcon.classList.toggle("hidden");
+        }, 1500);
 
         setCopyIconPressed(true); // prevents from clicking the button again ang again
         copyIcon.classList.toggle("hidden");
@@ -46,23 +44,19 @@ export const copyLink = async (copyIconPressed, setCopyIconPressed, codeURL) => 
 };
 
 // ! DEBOUNCE
-export const checkSourceCode = (sourceCode, setSaveButtonState, savingLimitReached, linkID) => {
+export const toggleSaveVersionButton = (codeEditorSourceCode, setSaveVersionButtonDisabled, codeEditorReadOnly, sourceCodeInfoID) => {
     const IS_EMPTY = "";
-    if (sourceCode == IS_EMPTY || savingLimitReached || linkID == IS_EMPTY) {
-        console.log("TRUE");
-        setSaveButtonState(true); // disable the button if the editory is empty
+    if (codeEditorSourceCode == IS_EMPTY || codeEditorReadOnly || sourceCodeInfoID == IS_EMPTY) {
+        setSaveVersionButtonDisabled(true); // disable the button if the editory is empty
     } else {
-        setSaveButtonState(false);
+        setSaveVersionButtonDisabled(false);
     }
 };
 
-
-export const disableButtonForTenSeconds = (setSaveButtonState, setSavingLimitReached) => {
-    setSavingLimitReached(true)
-    setSaveButtonState(true);
+export const disableButtonForTenSeconds = (setSaveVersionButtonDisabled) => {
+    setSaveVersionButtonDisabled(true); /*  save version button is disabled */
     setTimeout(() => {
-        setSavingLimitReached(false);
-        setSaveButtonState(false);
+        setSaveVersionButtonDisabled(false);
     }, 10000)
 };
 

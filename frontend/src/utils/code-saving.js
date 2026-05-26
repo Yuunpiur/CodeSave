@@ -1,84 +1,79 @@
-
-
-// !
-export const createNewCodeInfo = async (setLinkID, sourceCode, programmingLanguage) => {
+export const addSourceCodeInfo = async (codeEditorSourceCode, programmingLanguage) => {
     try {
         const requestOptions = {
             method: "POST",
             body: JSON.stringify({
-                sourceCode: sourceCode,
+                codeEditorSourceCode: codeEditorSourceCode,
                 programmingLanguage: programmingLanguage,
             }),
             headers: { "Content-Type": "application/json" },
         };
 
-        const result = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/code/create-code-info`,
+        const fetchResponse = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}api/code/add-source-code-info`,
             requestOptions,
         );
 
-        const { linkID } = await result.json();
-        setLinkID(linkID);
+        const { sourceCodeInfoID } = await fetchResponse.json();
+        return sourceCodeInfoID;
     } catch (error) {
         console.error(error);
     }
 };
 
 // !
-export const fetchSourceCodeInfo = async (id, setSourceCode, setProgrammingLanguage, setLiveSourceCode) => {
+export const fetchSourceCodeInfo = async (sourceCodeInfoID) => {
     try {
         const requestOptions = {
             method: "POST",
-            body: JSON.stringify({ id: id }),
+            body: JSON.stringify({ sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        const data = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/code/fetch-source-code`,
+        const fetchResponse = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}api/code/fetch-source-code-info`,
             requestOptions,
         );
-        const sourceCodeInfo = await data.json();
-        setLiveSourceCode(sourceCodeInfo.sourceCode);
-        setSourceCode(sourceCodeInfo.sourceCode);
-        setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
+        const sourceCodeInfo = await fetchResponse.json();
+        return sourceCodeInfo;
+
+
     } catch (error) {
         console.error(error);
     }
 };
 
 // !
-export const updateSourceCodeInfo = async (sourceCode, id) => {
+export const updateSourceCodeInfo = async (codeEditorSourceCode, sourceCodeInfoID) => {
     try {
         const requestOptions = {
             method: "PUT",
-            body: JSON.stringify({ sourceCode: sourceCode, linkID: id }),
+            body: JSON.stringify({ codeEditorSourceCode: codeEditorSourceCode, sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}api/code/update-source-code`, requestOptions);
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}api/code/update-source-code-info`, requestOptions);
     } catch (error) {
         console.error(error);
     }
 };
 
 
-export const checkIfIDExists = async (id) => {
+export const sourceCodeInfoIDExist = async (sourceCodeInfoID) => {
     try {
         const requestOptions = {
             method: "POST",
-            body: JSON.stringify({ id: id }),
+            body: JSON.stringify({ sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
 
-        const data = await fetch(
+        const fetchResponse = await fetch(
             `${import.meta.env.VITE_BACKEND_URL}api/code/check-id-exist`,
             requestOptions,
         );
-        const IDExist = await data.json();
-        return IDExist.linkIDExist;
+        const { IDExist } = await fetchResponse.json();
+        return IDExist;
     }
     catch (error) {
-
         console.error(error);
-
     }
 }
 

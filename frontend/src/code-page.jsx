@@ -8,120 +8,152 @@ import { useParams } from "react-router-dom";
 import copyIcon from "./assets/IMAGES/ICONS/copy.svg";
 import checkIcon from "./assets/IMAGES/ICONS/check.svg";
 import {
-  createNewCodeInfo,
+  addSourceCodeInfo,
   fetchSourceCodeInfo,
   updateSourceCodeInfo,
-  checkIfIDExists,
+  sourceCodeInfoIDExist,
 } from "./utils/code-saving.js";
 
 import {
-  saveVersion,
-  fetchVersionBlocks,
-  fetchVersionBlockSourceCode,
-  deleteVersionBlock,
+  addVersionInfo,
+  fetchVersionsDetails,
+  fetchVersionSourceCode,
+  deleteVersion,
 } from "./utils/version-saving.js";
 
 import {
   sendDataToCallBackUseStateVariable,
   debounceBlock,
   copyLink,
-  checkSourceCode,
+  toggleSaveVersionButton,
   disableButtonForTenSeconds,
 } from "./utils/client-utils.js";
 
 const CodePage = () => {
   const navigate = useNavigate();
   const [programmingLanguage, setProgrammingLanguage] = useState("javascript");
-  const [sourceCode, setSourceCode] = useState("");
-  const [liveSourceCode, setLiveSourceCode] = useState(""); //! For the undo button, this is where all the typed source code is saved, more advance than sourceCode usestate variable
-  const [linkID, setLinkID] = useState(undefined);
-  const { id: rawID } = useParams();
-  const id = rawID ?? linkID ?? "";
+  const [codeEditorSourceCode, setCodeEditorSourceCode] = useState("");
+  const [latestSourceCode, setLatestSourceCode] = useState("");
+  const { id: existingSourceCodeInfoID } = useParams();
+  const [sourceCodeInfoID, setSourceCodeInfoID] = useState(
+    existingSourceCodeInfoID ?? "",
+  );
   const [codeURL, setCodeURL] = useState("");
   const [copyIconPressed, setCopyIconPressed] = useState(false);
-  const [saveButtonState, setSaveButtonState] = useState(id == "");
-  const [savingLimitReached, setSavingLimitReached] = useState(false);
-  const [saveButtonIsPressed, setSaveButtonIsPressed] = useState(false);
+  const [saveVersionButtonDisabled, setSaveVersionButtonDisabled] = useState(
+    sourceCodeInfoID == "",
+  );
+  const [showSaveVersionPopUp, setShowSaveVersionPopUp] = useState(false);
+  const [showDeleteVersionPopup, setDeleteVersionPopup] = useState(false);
   const [versionName, setVersionName] = useState("");
-  const [codeIsSaved, setCodeIsSaved] = useState(true); // ! cause code is not saved when the the setTimeout block is not yet executed
-  const [versionBlocks, setVersionBlocks] = useState([]);
-  const [codeReadOnly, setCodeReadOnly] = useState(false);
-  const [deletePopupIsPressed, setDeletePopupIsPressed] = useState(false);
-  const [verID, setVerID] = useState("");
+  const [savedVersionsDetails, setSavedVersionsDetails] = useState([]);
+  const [codeEditorReadOnly, setCodeEditorReadOnly] = useState(false);
+  const [versionToDeleteID, setVersionToDeleteID] = useState("");
 
-  const options = {
+  const monacoEditorOptions = {
     fontFamily: "'JetBrains Mono', Consolas, 'Courier New', monospace",
     fontSize: 16,
-    readOnly: codeReadOnly,
+    readOnly: codeEditorReadOnly,
   };
 
-  // ! Check if the id is existing
   useEffect(() => {
-    if (id) {
+    if (sourceCodeInfoID != "") {
       (async () => {
-        const IDEexist = await checkIfIDExists(id);
-        if (!IDEexist) {
+        if (await sourceCodeInfoIDExist(sourceCodeInfoID)) {
+          setCodeURL(`${import.meta.env.VITE_FRONTEND_URL}${sourceCodeInfoID}`);
+          (async () => {
+            const sourceCodeInfo = await fetchSourceCodeInfo(sourceCodeInfoID);
+            setLatestSourceCode(sourceCodeInfo.codeEditorSourceCode);
+            setCodeEditorSourceCode(sourceCodeInfo.codeEditorSourceCode);
+            setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
+          })();
+        } else {
           navigate("/not-found");
         }
       })();
     }
-  }, [id]);
+  }, [sourceCodeInfoID]);
 
   useEffect(() => {
-    console.log("1");
-  }, [sourceCode]);
-
-  useEffect(() => {
-    if (!id && sourceCode != "") {
-      createNewCodeInfo(setLinkID, sourceCode, programmingLanguage);
-      setSaveButtonState(false);
-    }
-  }, [sourceCode]);
-
-  useEffect(() => {
-    setCodeURL(`${import.meta.env.VITE_FRONTEND_URL}${id}`);
-    if (id && (sourceCode == "" || sourceCode == undefined)) {
+    if (!sourceCodeInfoID && codeEditorSourceCode != "") {
       (async () => {
-        await fetchSourceCodeInfo(
-          id,
-          setSourceCode,
-          setProgrammingLanguage,
-          setLiveSourceCode,
+        setSourceCodeInfoID(
+          await addSourceCodeInfo(codeEditorSourceCode, programmingLanguage),
         );
+        console.log("! ADD SOURCE CODE");
+        setSaveVersionButtonDisabled(false);
       })();
-      setLiveSourceCode(sourceCode);
     }
-  }, [id]);
+  }, [codeEditorSourceCode]);
+
+  /*   useEffect(() => {
+    setCodeURL(`${import.meta.env.VITE_FRONTEND_URL}${sourceCodeInfoID}`);
+    if (
+      sourceCodeInfoID &&
+      (codeEditorSourceCode == "" || codeEditorSourceCode == undefined)
+    ) {
+      (async () => {
+        const sourceCodeInfo = await fetchSourceCodeInfo(sourceCodeInfoID);
+        setLatestSourceCode(sourceCodeInfo.codeEditorSourceCode);
+        setCodeEditorSourceCode(sourceCodeInfo.codeEditorSourceCode);
+        setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
+      })();
+      setLatestSourceCode(codeEditorSourceCode); 
+    }
+  }, [sourceCodeInfoID]);    */
 
   useEffect(() => {
-    if (id && sourceCode != "" && !codeReadOnly) {
-      setLiveSourceCode(sourceCode);
-      updateSourceCodeInfo(sourceCode, id);
+    if (sourceCodeInfoID && codeEditorSourceCode != "" && !codeEditorReadOnly) {
+      setLatestSourceCode(codeEditorSourceCode);
+      updateSourceCodeInfo(codeEditorSourceCode, sourceCodeInfoID);
     }
-  }, [sourceCode]);
+  }, [codeEditorSourceCode]);
 
   useEffect(() => {
-    checkSourceCode(sourceCode, setSaveButtonState, savingLimitReached, id);
-  }, [sourceCode, id]);
+    toggleSaveVersionButton(
+      codeEditorSourceCode,
+      setSaveVersionButtonDisabled,
+      codeEditorReadOnly,
+      sourceCodeInfoID,
+    );
+  }, [codeEditorSourceCode, sourceCodeInfoID]);
 
   useEffect(() => {
-    if (id) {
-      fetchVersionBlocks(id, setVersionBlocks);
+    if (sourceCodeInfoID) {
+      (async () => {
+        setSavedVersionsDetails(await fetchVersionsDetails(sourceCodeInfoID));
+        console.log(savedVersionsDetails);
+      })();
     }
-  }, [id]);
+  }, [sourceCodeInfoID]);
+
+  useEffect(() => {}, [codeEditorReadOnly]);
 
   const debounceFunction = debounceBlock(2000);
 
   return (
     <>
       <div className="parent-container w-screen h-screen bg-[#0C0C0C] overflow-hidden">
-        <div className="header w-full h-[6%] border-b border-white/10 flex items-center px-4 md:px-7">
-          <div className="logo jersey-25-regular text-[30px] md:text-[30px] text-white tracking-[0.18em] uppercase">
+        <div className="header w-full h-[7%] border-b border-white/10 flex items-center justify-between px-4 md:px-7 ">
+          <div className="logo font-noto text-[30px] md:text-[40px] text-white tracking-[0.18em] uppercase ">
             CodeSave
+          </div>
+          <div className="auth-button-group">
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+              className="font-noto text-sm text-black bg-white border border-[#E8E5DC] p-1.5 me-5 rounded-md w-20 cursor-pointer hover:bg-[#C5A882] hover:border-[#C5A882] transition-all duration-150"
+            >
+              Sign Up
+            </button>
+            <button className="font-noto text-sm text-black bg-white border border-[#E8E5DC] p-1.5 rounded-md w-20 cursor-pointer hover:bg-[#C5A882] hover:border-[#C5A882] transition-all duration-150">
+              Log In
+            </button>
           </div>
         </div>
 
-        <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:p-4 h-[94%] w-full gap-3 md:gap-4 overflow-hidden">
+        <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:px-4 md:pt-12 md:pb-8 h-[94%] w-full gap-3 md:gap-4 overflow-hidden">
           <div className="code-space flex flex-col h-[60%] lg:h-full w-full lg:w-[73%]">
             <div className="code-space-header mb-3 h-[5%] min-h-9 w-full flex gap-2 md:gap-4 items-center">
               <DropDownMenu
@@ -131,9 +163,12 @@ const CodePage = () => {
                     setProgrammingLanguage,
                   );
                 }}
-                programmingLanguage={programmingLanguage}
+                programmingLanguage={
+                  programmingLanguage.charAt(0).toUpperCase() +
+                  programmingLanguage.slice(1)
+                }
               />
-              <div className="code-link bg-[#181818] border border-white/10 rounded-lg h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-[#E8E5DC]/30 jersey-25-regular text-xs md:text-sm tracking-[0.14em] truncate">
+              <div className="code-link bg-[#181818] border border-white/10 rounded-lg h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-[#E8E5DC]/30 font-noto text-xs md:text-sm tracking-[0.14em] truncate">
                 {codeURL}
               </div>
               <div
@@ -158,14 +193,14 @@ const CodePage = () => {
               <Editor
                 className="w-full h-full"
                 language={programmingLanguage}
-                value={`${sourceCode}`}
+                value={`${codeEditorSourceCode}`}
                 theme="vs-dark"
                 onChange={(value) => {
-                  if (!codeReadOnly) {
-                    debounceFunction(value, setSourceCode, setCodeIsSaved);
+                  if (!codeEditorReadOnly) {
+                    debounceFunction(value, setCodeEditorSourceCode);
                   }
                 }}
-                options={options}
+                options={monacoEditorOptions}
               />
             </div>
           </div>
@@ -173,11 +208,11 @@ const CodePage = () => {
           <div className="version-history flex flex-col h-[38%] lg:h-full w-full lg:w-[22%] min-h-0">
             <div className="button-container h-8 mb-3 flex justify-between items-center shrink-0">
               <button
-                className={`bg-[#181818] hover:bg-[#242424] border border-white/10 hover:border-white/20 text-[#E8E5DC] transition-all duration-150 rounded-lg h-8 px-3 cursor-pointer flex items-center justify-center ${codeReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
-                disabled={!codeReadOnly}
+                className={`undo-button bg-[#181818] hover:bg-[#242424] border border-white/10 hover:border-white/20 text-[#E8E5DC] transition-all duration-150 rounded-lg h-8 px-3 cursor-pointer flex items-center justify-center ${codeEditorReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
+                disabled={!codeEditorReadOnly}
                 onClick={() => {
-                  setSourceCode(liveSourceCode);
-                  setCodeReadOnly(false);
+                  setCodeEditorSourceCode(latestSourceCode);
+                  setCodeEditorReadOnly(false);
                 }}
               >
                 <svg
@@ -196,37 +231,38 @@ const CodePage = () => {
                 </svg>
               </button>
               <button
-                className={`save-button bg-[#C5A882] hover:bg-[#d4bc9a] text-[#0C0C0C] transition-all duration-150 rounded-lg h-8 px-5 jersey-25-regular tracking-widest text-[13px] uppercase font-medium
-             ${saveButtonState ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
-                disabled={saveButtonState}
-                onClick={() => setSaveButtonIsPressed(true)}
+                className={`save-button bg-[#C5A882] hover:bg-[#d4bc9a] text-[#0C0C0C] transition-all duration-150 rounded-lg h-8 px-5 font-noto tracking-widest text-[13px] uppercase font-medium
+             ${saveVersionButtonDisabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+                disabled={saveVersionButtonDisabled}
+                onClick={() => setShowSaveVersionPopUp(true)}
               >
                 SAVE
               </button>
             </div>
             <div className="all-versions bg-[#181818] border border-white/10 rounded-[14px] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
-              {versionBlocks.length > 0
-                ? versionBlocks.map((versionInfo) => {
+              {savedVersionsDetails.length > 0
+                ? savedVersionsDetails.map((versionInfo) => {
                     return (
                       <div
                         className="version-card w-full bg-[#242424] hover:bg-[#2a2a2a] border border-white/10 hover:border-white/20 transition-all duration-150 rounded-lg cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0 relative group"
                         key={versionInfo.ver_id}
                         id={versionInfo.ver_id}
                         onClick={(e) => {
-                          setCodeReadOnly(true);
-                          fetchVersionBlockSourceCode(
-                            id,
-                            e.target.id,
-                            setSourceCode,
-                          );
+                          setCodeEditorReadOnly(true);
+                          (async () => {
+                            setCodeEditorSourceCode(
+                              await fetchVersionSourceCode(e.target.id),
+                            );
+                          })();
                         }}
                       >
                         <div
                           className="delete-button-container"
                           onClick={(e) => {
-                            setVerID(e.target.id);
+                            setVersionToDeleteID(e.target.id);
                             e.stopPropagation();
-                            setDeletePopupIsPressed(true);
+                            setDeleteVersionPopup(true);
+                            /*     setSaveVersionButtonDisabled(true); */
                           }}
                           id={versionInfo.ver_id}
                         >
@@ -243,13 +279,13 @@ const CodePage = () => {
                         </div>
 
                         <div
-                          className="version-name text-[#E8E5DC] jersey-25-regular text-[15px] md:text-[17px] tracking-wide"
+                          className="version-name text-[#E8E5DC] font-noto text-[15px] md:text-[17px] tracking-wide"
                           id={versionInfo.ver_id}
                         >
                           {versionInfo.ver_name}
                         </div>
                         <div
-                          className="created-date-time text-[#C5A882]/50 jersey-25-regular text-[11px] tracking-[0.14em] uppercase mt-1"
+                          className="created-date-time text-[#C5A882]/50 font-noto text-[11px] tracking-[0.14em] uppercase mt-1"
                           id={versionInfo.ver_id}
                         >
                           {versionInfo.created_at}
@@ -262,27 +298,27 @@ const CodePage = () => {
           </div>
         </div>
         {/* ! THIS IS THE POP UP */}
-        {saveButtonIsPressed ? (
+        {showSaveVersionPopUp ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-1000 px-4">
             <div className="w-full max-w-85 bg-[#181818] border border-white/10 rounded-[14px] overflow-hidden">
               <div className="px-5 md:px-7 pt-6 pb-5 border-b border-white/6">
-                <div className="text-[11px] tracking-[0.18em] uppercase text-[#C5A882]/60 mb-1.5 jersey-25-regular">
+                <div className="text-[11px] tracking-[0.18em] uppercase text-[#C5A882]/60 mb-1.5 font-noto">
                   CodeSave
                 </div>
-                <h2 className="text-[24px] md:text-[26px] text-[#E8E5DC] tracking-wide jersey-25-regular font-normal">
+                <h2 className="text-[24px] md:text-[26px] text-[#E8E5DC] tracking-wide font-noto font-normal">
                   Save Version
                 </h2>
               </div>
 
               <div className="px-5 md:px-7 pt-5 pb-6">
                 <label
-                  className="block text-[11px] tracking-[0.14em] uppercase text-[#C5A882]/70 mb-2 jersey-25-regular"
+                  className="block text-[11px] tracking-[0.14em] uppercase text-[#C5A882]/70 mb-2 font-noto"
                   htmlFor="version-name"
                 >
                   Version name
                 </label>
                 <input
-                  className="w-full bg-[#242424] border border-white/10 rounded-lg text-[#E8E5DC] text-sm px-3.5 py-2.5 outline-none focus:border-[#C5A882]/45 transition-colors jersey-25-regular tracking-wide"
+                  className="w-full bg-[#242424] border border-white/10 rounded-lg text-[#E8E5DC] text-sm px-3.5 py-2.5 outline-none focus:border-[#C5A882]/45 transition-colors font-noto tracking-wide"
                   id="version-name"
                   name="version-name"
                   placeholder="e.g. auth-flow-fix"
@@ -297,34 +333,31 @@ const CodePage = () => {
 
               <div className="px-5 md:px-7 pb-6 flex gap-2.5">
                 <button
-                  className="flex-1 bg-transparent border border-white/20 text-white/50 hover:border-white/45 hover:text-white/85 rounded-lg py-2.5 text-[15px] tracking-widest uppercase jersey-25-regular transition-all duration-150 cursor-pointer"
+                  className="flex-1 bg-transparent border border-white/20 text-white/50 hover:border-white/45 hover:text-white/85 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
                   onClick={() => {
-                    setSaveButtonIsPressed(false);
+                    setShowSaveVersionPopUp(false);
                   }}
                 >
                   Exit
                 </button>
                 <button
-                  className="flex-1 bg-[#C5A882] hover:bg-[#d4bc9a] border-none text-[#0C0C0C] rounded-lg py-2.5 text-[15px] tracking-widest uppercase jersey-25-regular font-medium transition-all duration-150 cursor-pointer"
+                  className="flex-1 bg-[#C5A882] hover:bg-[#d4bc9a] border-none text-[#0C0C0C] rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto font-medium transition-all duration-150 cursor-pointer"
                   disabled={versionName == ""}
                   onClick={() => {
-                    setSaveButtonIsPressed(false);
-                    disableButtonForTenSeconds(
-                      setSaveButtonState,
-                      setSavingLimitReached,
-                    );
+                    setShowSaveVersionPopUp(false);
+                    disableButtonForTenSeconds(setSaveVersionButtonDisabled);
 
                     (async () => {
-                      await saveVersion(
-                        sourceCode,
+                      const versionInfo = await addVersionInfo(
+                        codeEditorSourceCode,
                         versionName,
-                        id,
-                        saveButtonState,
-                        versionBlocks,
-                        setVersionBlocks,
+                        sourceCodeInfoID,
+                        saveVersionButtonDisabled,
                       );
 
-                      fetchVersionBlocks(id, setVersionBlocks);
+                      setSavedVersionsDetails(
+                        await fetchVersionsDetails(sourceCodeInfoID),
+                      );
                     })();
                   }}
                 >
@@ -335,14 +368,14 @@ const CodePage = () => {
           </div>
         ) : null}
 
-        {deletePopupIsPressed ? (
+        {showDeleteVersionPopup ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-black/50 backdrop-blur-sm z-1000 px-4">
             <div className="w-full max-w-85 bg-[#181818] border border-white/10 rounded-[14px] overflow-hidden">
               <div className="px-5 md:px-7 pt-6 pb-5 border-b border-white/6">
-                <div className="text-[11px] tracking-[0.18em] uppercase text-red-500/60 mb-1.5 jersey-25-regular">
+                <div className="text-[11px] tracking-[0.18em] uppercase text-red-500/60 mb-1.5 font-noto">
                   CodeSave
                 </div>
-                <h2 className="text-[24px] md:text-[26px] text-[#E8E5DC] tracking-wide jersey-25-regular font-normal">
+                <h2 className="text-[24px] md:text-[26px] text-[#E8E5DC] tracking-wide font-noto font-normal">
                   Delete Version
                 </h2>
               </div>
@@ -356,18 +389,20 @@ const CodePage = () => {
 
               <div className="px-5 md:px-7 pb-6 flex gap-2.5">
                 <button
-                  className="flex-1 bg-transparent border border-white/20 text-white/50 hover:border-white/45 hover:text-white/85 rounded-lg py-2.5 text-[15px] tracking-widest uppercase jersey-25-regular transition-all duration-150 cursor-pointer"
-                  onClick={() => setDeletePopupIsPressed(false)}
+                  className="flex-1 bg-transparent border border-white/20 text-white/50 hover:border-white/45 hover:text-white/85 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                  onClick={() => setDeleteVersionPopup(false)}
                 >
                   No
                 </button>
                 <button
-                  className="flex-1 bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 hover:border-red-500/50 text-red-400 rounded-lg py-2.5 text-[15px] tracking-widest uppercase jersey-25-regular transition-all duration-150 cursor-pointer"
+                  className="flex-1 bg-red-500/15 hover:bg-red-500/25 border border-red-500/30 hover:border-red-500/50 text-red-400 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
                   onClick={() => {
-                    setDeletePopupIsPressed(false);
+                    setDeleteVersionPopup(false);
                     (async () => {
-                      await deleteVersionBlock(verID);
-                      fetchVersionBlocks(id, setVersionBlocks);
+                      await deleteVersion(versionToDeleteID);
+                      setSavedVersionsDetails(
+                        await fetchVersionsDetails(sourceCodeInfoID),
+                      );
                     })();
                   }}
                 >
