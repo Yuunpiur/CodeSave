@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 import codeInfoRouter from "./routes/route-code-info.js";
 import versionInfoRouter from "./routes/route-version-info.js";
+import authenticationRouter from "./routes/route-authenticate.js"
 
 const app = express();
 
@@ -14,6 +15,7 @@ app.use(cors({
 app.use(express.json());
 app.use("/api/code", codeInfoRouter);
 app.use("/api/version", versionInfoRouter);
+app.use("/api/authenticate", authenticationRouter)
 
 app.listen(process.env.PORT, () => {
     console.log("SERVER IS RUNNING");

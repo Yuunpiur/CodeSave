@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { addUserAccount } from "./utils/register";
 import "./main.css"; // Reusing your global styles
 
 const AuthPage = () => {
@@ -18,18 +19,19 @@ const AuthPage = () => {
     });
   };
 
-  useEffect(() => {
-    console.log(formData);
-  }, [formData]);
-
   const handleSubmit = (e) => {
-    e.preventDefault();
+    console.log("WORKING");
+    e.preventDefault(); /* Prevents the page */
     if (!isLogin && formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
-    console.log(`${isLogin ? "Logging in" : "Signing up"} with:`, formData);
-    // Add auth logic or redirect here
+    if (isLogin) {
+      // LOGGING IN: FE function passing email and pass
+    } else if (!isLogin) {
+      // SIGNING UP: FE functino passing email and pass
+      addUserAccount(formData.email, formData.password);
+    }
     navigate("/");
   };
 
