@@ -5,7 +5,7 @@ export const addUserAccountController = async (req, res) => {
     try {
         const { email, password } = req.body;
         const statusMessage = await authenticationServices.addUserAccount(email, password);
-        res.json({ statusMessage: "No errors" });
+        res.json(statusMessage);
     }
     catch (error) {
         console.error(error);

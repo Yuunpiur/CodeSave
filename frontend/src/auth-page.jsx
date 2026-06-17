@@ -21,7 +21,7 @@ const AuthPage = () => {
 
   const handleSubmit = (e) => {
     console.log("WORKING");
-    e.preventDefault(); /* Prevents the page */
+    e.preventDefault(); 
     if (!isLogin && formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;

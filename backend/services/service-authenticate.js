@@ -4,12 +4,26 @@ import { db } from "../config/db.js";
 export const addUserAccount = async (email, password) => {
 
     try {
-        const userID = generateUUID();
-        const hashedPassword = await hashPassword(password);
-        const insertQueryResult = await db.query("INSERT INTO USER_INFO (user_id, email, password) VALUES($1, $2, $3)", [userID, email, hashedPassword]);
+
+        /* Check if the email already exists */
+        const selectQueryResult = await db.query("SELECT email FROM USER_INFO WHERE email = $1", [email]);
+        const emailExist = selectQueryResult.rows[0];
 
 
-        return;
+        if (!emailExist) {
+            /* Add the users credentials to the db */
+            const userID = generateUUID();
+            const hashedPassword = await hashPassword(password);
+            const lowerCaseEmail = email.toLowerCase();
+            const insertQueryResult = await db.query("INSERT INTO USER_INFO (user_id, email, password) VALUES($1, $2, $3)", [userID, lowerCaseEmail, hashedPassword]);
+
+            return { userAdded: true };
+
+        }
+
+        else {
+            return { userAdded: false };
+        }
 
     }
     catch (error) {
