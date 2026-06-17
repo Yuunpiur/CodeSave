@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addUserAccount } from "./utils/register";
+import { addUserAccount, userExist } from "./utils/register";
 import "./main.css"; // Reusing your global styles
 
 const AuthPage = () => {
@@ -19,17 +19,19 @@ const AuthPage = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     console.log("WORKING");
-    e.preventDefault(); 
+    e.preventDefault();
     if (!isLogin && formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
       return;
     }
     if (isLogin) {
-      // LOGGING IN: FE function passing email and pass
+      console.log("LOGGIN IN..");
+      if (userExist(formData.email, formData.password)) {
+        // load the page and the users data
+      }
     } else if (!isLogin) {
-      // SIGNING UP: FE functino passing email and pass
       addUserAccount(formData.email, formData.password);
     }
     navigate("/");

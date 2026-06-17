@@ -1,13 +1,14 @@
 import { hashPassword, generateUUID } from "../utils/crypto-utils.js";
 import { db } from "../config/db.js";
+import bcrypt from "bcrypt";
 
 export const addUserAccount = async (email, password) => {
 
     try {
-
         /* Check if the email already exists */
         const selectQueryResult = await db.query("SELECT email FROM USER_INFO WHERE email = $1", [email]);
         const emailExist = selectQueryResult.rows[0];
+
 
 
         if (!emailExist) {
@@ -29,5 +30,34 @@ export const addUserAccount = async (email, password) => {
     catch (error) {
         console.error("service", error);
     }
+};
+
+
+
+export const checkIfUserExist = async (email, plainTextPassword) => {
+
+    try {
+        const selectQueryResult = await db.query("SELECT email, password AS hashedPassword FROM USER_INFO WHERE email = $1", [email]);
+        const emailExist = selectQueryResult.rows[0];
+
+        if (!emailExist) {
+            return { userExist: false }; // PROMPT AND ERROR MESSAGE, EMAIL IS INCORRECT OR DOESN'T EXIST
+        }
+
+        const hashedPassword = selectQueryResult.rows[0].hashedpassword;
+        const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
+
+        if (passwordMatch) {
+            return { userExist: true }; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH
+        }
+        else {
+            return { userExist: false }; // LOG IN
+        }
+
+    }
+    catch (error) {
+        console.error("service", error);
+    }
+
 };
 

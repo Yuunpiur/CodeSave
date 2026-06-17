@@ -4,6 +4,7 @@ const router = express.Router();
 
 
 router.post("/add-user-account", authenticationControllers.addUserAccountController)
+router.post("/check-if-user-exist", authenticationControllers.checkIfUserExistController)
 
 
 export default router;
