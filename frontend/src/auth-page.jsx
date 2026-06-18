@@ -28,13 +28,18 @@ const AuthPage = () => {
     }
     if (isLogin) {
       console.log("LOGGIN IN..");
-      if (userExist(formData.email, formData.password)) {
+      if (await userExist(formData.email, formData.password)) {
         // load the page and the users data
+        console.log("logged in!");
       }
     } else if (!isLogin) {
-      addUserAccount(formData.email, formData.password);
+      const userAdded = await addUserAccount(formData.email, formData.password);
+      if (userAdded) {
+        // load the page and the users data
+        console.log("signed up!");
+      }
     }
-    navigate("/");
+    /* navigate("/"); */
   };
 
   return (

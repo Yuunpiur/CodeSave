@@ -14,6 +14,11 @@ export const addUserAccount = async (email, password) => {
             requestOptions,
         );
 
+        const { userAdded } = await fetchResponse.json();
+        return userAdded;
+
+
+
     } catch (error) {
         console.error(error);
     }
@@ -35,6 +40,9 @@ export const userExist = async (email, password) => {
             `${import.meta.env.VITE_BACKEND_URL}api/authenticate/check-if-user-exist`,
             requestOptions,
         );
+
+        const { userExist } = await fetchResponse.json();
+        return userExist;
 
     } catch (error) {
         console.error(error);
