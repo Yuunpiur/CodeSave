@@ -48,10 +48,10 @@ export const checkIfUserExist = async (email, plainTextPassword) => {
         const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
 
         if (passwordMatch) {
-            return { userExist: true }; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH
+            return { userExist: true };  // LOG IN
         }
         else {
-            return { userExist: false }; // LOG IN
+            return { userExist: false }; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH
         }
 
     }
