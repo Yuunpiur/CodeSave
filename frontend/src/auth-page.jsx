@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { addUserAccount, userExist } from "./utils/register";
+import { signUp, login } from "./utils/register";
 import "./main.css"; // Reusing your global styles
 
 const AuthPage = () => {
@@ -28,15 +28,15 @@ const AuthPage = () => {
     }
     if (isLogin) {
       console.log("LOGGIN IN..");
-      if (await userExist(formData.email, formData.password)) {
+      const JWT = await login(formData.email, formData.password);
+      if (JWT) {
         // load the page and the users data
-        console.log("logged in!");
       }
     } else if (!isLogin) {
-      const userAdded = await addUserAccount(formData.email, formData.password);
-      if (userAdded) {
+      const JWT = await signUp(formData.email, formData.password);
+
+      if (JWT) {
         // load the page and the users data
-        console.log("signed up!");
       }
     }
     /* navigate("/"); */

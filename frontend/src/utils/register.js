@@ -1,4 +1,4 @@
-export const addUserAccount = async (email, password) => {
+export const signUp = async (email, password) => {
     try {
         const requestOptions = {
             method: "POST",
@@ -14,18 +14,15 @@ export const addUserAccount = async (email, password) => {
             requestOptions,
         );
 
-        const { userAdded } = await fetchResponse.json();
-        return userAdded;
-
-
-
+        const { JWT } = await fetchResponse.json();
+        return JWT;
     } catch (error) {
         console.error(error);
     }
 };
 
 
-export const userExist = async (email, password) => {
+export const login = async (email, password) => {
     try {
         const requestOptions = {
             method: "POST",
@@ -41,8 +38,8 @@ export const userExist = async (email, password) => {
             requestOptions,
         );
 
-        const { userExist } = await fetchResponse.json();
-        return userExist;
+        const { JWT } = await fetchResponse.json();
+        return JWT;
 
     } catch (error) {
         console.error(error);

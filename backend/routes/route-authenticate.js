@@ -3,8 +3,8 @@ import * as authenticationControllers from "../controllers/controller-authentica
 const router = express.Router();
 
 
-router.post("/add-user-account", authenticationControllers.addUserAccountController)
-router.post("/check-if-user-exist", authenticationControllers.checkIfUserExistController)
+router.post("/add-user-account", authenticationControllers.signUpController)
+router.post("/check-if-user-exist", authenticationControllers.loginController)
 
 
 export default router;

@@ -3,8 +3,7 @@ import { db } from "../config/db.js";
 import bcrypt from "bcrypt";
 import generateJWT from "../utils/generate-jwt.js";
 
-export const addUserAccount = async (email, password) => {
-
+export const signUp = async (email, password) => {
     try {
         /* Check if the email already exists */
         const selectQueryResult = await db.query("SELECT email FROM USER_INFO WHERE email = $1", [email]);
@@ -16,13 +15,13 @@ export const addUserAccount = async (email, password) => {
             const hashedPassword = await hashPassword(password);
             const lowerCaseEmail = email.toLowerCase();
             const insertQueryResult = await db.query("INSERT INTO USER_INFO (user_id, email, password) VALUES($1, $2, $3)", [userID, lowerCaseEmail, hashedPassword]);
-            generateJWT(email);
 
-            return { userAdded: true };
+
+            return generateJWT(email);
         }
 
         else {
-            return { userAdded: false };
+            return "";
         }
 
     }
@@ -33,24 +32,23 @@ export const addUserAccount = async (email, password) => {
 
 
 
-export const checkIfUserExist = async (email, plainTextPassword) => {
-
+export const login = async (email, plainTextPassword) => {
     try {
         const selectQueryResult = await db.query("SELECT email, password AS hashedPassword FROM USER_INFO WHERE email = $1", [email]);
         const emailExist = selectQueryResult.rows[0];
 
         if (!emailExist) {
-            return { userExist: false }; // PROMPT AND ERROR MESSAGE, EMAIL IS INCORRECT OR DOESN'T EXIST
+            return { JWT: "" }; // PROMPT AND ERROR MESSAGE, EMAIL IS INCORRECT OR DOESN'T EXIST
         }
 
         const hashedPassword = selectQueryResult.rows[0].hashedpassword;
         const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
 
         if (passwordMatch) {
-            return { userExist: true };  // LOG IN
+            return generateJWT(email);  // LOG IN
         }
         else {
-            return { userExist: false }; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH
+            return ""; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH
         }
 
     }
