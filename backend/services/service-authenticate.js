@@ -1,6 +1,7 @@
 import { hashPassword, generateUUID } from "../utils/crypto-utils.js";
 import { db } from "../config/db.js";
 import bcrypt from "bcrypt";
+import generateJWT from "../utils/generate-jwt.js";
 
 export const addUserAccount = async (email, password) => {
 
@@ -9,17 +10,15 @@ export const addUserAccount = async (email, password) => {
         const selectQueryResult = await db.query("SELECT email FROM USER_INFO WHERE email = $1", [email]);
         const emailExist = selectQueryResult.rows[0];
 
-
-
         if (!emailExist) {
             /* Add the users credentials to the db */
             const userID = generateUUID();
             const hashedPassword = await hashPassword(password);
             const lowerCaseEmail = email.toLowerCase();
             const insertQueryResult = await db.query("INSERT INTO USER_INFO (user_id, email, password) VALUES($1, $2, $3)", [userID, lowerCaseEmail, hashedPassword]);
+            generateJWT(email);
 
             return { userAdded: true };
-
         }
 
         else {
@@ -61,3 +60,4 @@ export const checkIfUserExist = async (email, plainTextPassword) => {
 
 };
 
+/* generateJWT(); */

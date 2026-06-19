@@ -2,9 +2,10 @@ import express from "express";
 import cors from "cors";
 import codeInfoRouter from "./routes/route-code-info.js";
 import versionInfoRouter from "./routes/route-version-info.js";
+import generateJWT from "./utils/generate-jwt.js";
 import authenticationRouter from "./routes/route-authenticate.js"
 
-const app = express();
+export const app = express();
 
 app.use(cors({
     origin: [process.env.FRONTEND_URL],
