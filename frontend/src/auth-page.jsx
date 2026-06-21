@@ -29,14 +29,18 @@ const AuthPage = () => {
     }
     if (isLogin) {
       console.log("LOGGIN IN..");
-      const accessToken = await login(formData.email, formData.password);
-      if (accessToken) {
+      const jwt = await login(formData.email, formData.password);
+      if (jwt) {
+        setAccessToken(jwt);
+
         // load the page and the users data
       }
     } else if (!isLogin) {
-      const accessToken = await signUp(formData.email, formData.password);
+      const jwt = await signUp(formData.email, formData.password);
 
-      if (accessToken) {
+      if (jwt) {
+        console.log(jwt);
+        setAccessToken(jwt);
         // load the page and the users data
       }
     }
