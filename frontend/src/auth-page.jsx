@@ -28,14 +28,14 @@ const AuthPage = () => {
     }
     if (isLogin) {
       console.log("LOGGIN IN..");
-      const JWT = await login(formData.email, formData.password);
-      if (JWT) {
+      const accessToken = await login(formData.email, formData.password);
+      if (accessToken) {
         // load the page and the users data
       }
     } else if (!isLogin) {
-      const JWT = await signUp(formData.email, formData.password);
+      const accessToken = await signUp(formData.email, formData.password);
 
-      if (JWT) {
+      if (accessToken) {
         // load the page and the users data
       }
     }

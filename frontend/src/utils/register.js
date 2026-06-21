@@ -14,8 +14,8 @@ export const signUp = async (email, password) => {
             requestOptions,
         );
 
-        const { JWT } = await fetchResponse.json();
-        return JWT;
+        const { accessToken } = await fetchResponse.json();
+        return accessToken;
     } catch (error) {
         console.error(error);
     }
@@ -38,8 +38,8 @@ export const login = async (email, password) => {
             requestOptions,
         );
 
-        const { JWT } = await fetchResponse.json();
-        return JWT;
+        const { accessToken } = await fetchResponse.json();
+        return accessToken;
 
     } catch (error) {
         console.error(error);
