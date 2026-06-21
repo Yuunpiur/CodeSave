@@ -11,6 +11,7 @@ const AuthPage = () => {
     password: "",
     confirmPassword: "",
   });
+  const [accessToken, setAccessToken] = useState("");
 
   const handleChange = (e) => {
     setFormData({
