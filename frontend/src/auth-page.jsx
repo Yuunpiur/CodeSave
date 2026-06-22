@@ -29,6 +29,7 @@ const AuthPage = () => {
     }
     if (isLogin) {
       console.log("LOGGIN IN..");
+
       const jwt = await login(formData.email, formData.password);
       if (jwt) {
         setAccessToken(jwt);
@@ -39,7 +40,6 @@ const AuthPage = () => {
       const jwt = await signUp(formData.email, formData.password);
 
       if (jwt) {
-        console.log(jwt);
         setAccessToken(jwt);
         // load the page and the users data
       }

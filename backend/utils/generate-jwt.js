@@ -1,7 +1,7 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 
-const generateJWT = async (email, exp) => {
+const generateJWT = (email, exp) => {
     const payload = {
         email: email,
         role: "user"

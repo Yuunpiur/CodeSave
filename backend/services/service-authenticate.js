@@ -17,7 +17,8 @@ export const signUp = async (email, password) => {
             const insertQueryResult = await db.query("INSERT INTO USER_INFO (user_id, email, password) VALUES($1, $2, $3)", [userID, lowerCaseEmail, hashedPassword]);
 
             const accessToken = generateJWT(email, "15m");
-            return accessToken;
+            const refreshToken = generateJWT(email, "7d");
+            return { accessToken: accessToken, refreshToken: refreshToken };
         }
 
         else {
@@ -45,8 +46,9 @@ export const login = async (email, plainTextPassword) => {
         const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
 
         if (passwordMatch) {
-            const accessToken = generateJWT(email);
-            return accessToken;  // LOG IN
+            const accessToken = generateJWT(email, "15m");
+            const refreshToken = generateJWT(email, "7d");
+            return { accessToken: accessToken, refreshToken: refreshToken };  // LOG IN
         }
         else {
             return ""; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH

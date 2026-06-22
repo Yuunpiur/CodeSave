@@ -2,11 +2,12 @@ export const signUp = async (email, password) => {
     try {
         const requestOptions = {
             method: "POST",
+            credentials: "include",
             body: JSON.stringify({
                 email: email,
                 password: password
             }),
-            headers: { "Content-Type": "application/json" },
+            headers: { "Content-Type": "application/json" }
         };
 
         const fetchResponse = await fetch(
@@ -15,6 +16,7 @@ export const signUp = async (email, password) => {
         );
 
         const { accessToken } = await fetchResponse.json();
+
         return accessToken;
     } catch (error) {
         console.error(error);
@@ -26,11 +28,13 @@ export const login = async (email, password) => {
     try {
         const requestOptions = {
             method: "POST",
+            credentials: "include",
             body: JSON.stringify({
                 email: email,
                 password: password
             }),
             headers: { "Content-Type": "application/json" },
+            credentials: "include"
         };
 
         const fetchResponse = await fetch(
