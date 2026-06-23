@@ -21,7 +21,6 @@ const AuthPage = () => {
   };
 
   const handleSubmit = async (e) => {
-    console.log("WORKING");
     e.preventDefault();
     if (!isLogin && formData.password !== formData.confirmPassword) {
       alert("Passwords do not match!");
@@ -35,16 +34,18 @@ const AuthPage = () => {
         setAccessToken(jwt);
 
         // load the page and the users data
+        navigate("/dashboard");
       }
     } else if (!isLogin) {
       const jwt = await signUp(formData.email, formData.password);
 
       if (jwt) {
         setAccessToken(jwt);
+
         // load the page and the users data
+        navigate("/dashboard");
       }
     }
-    /* navigate("/"); */
   };
 
   return (

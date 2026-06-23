@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import CodePage from "./code-page";
 import NotFound from "./not-found";
 import Authpage from "./auth-page";
+import Dashboard from "./dashboard";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
     /* It is possible to encounter /:id where id is undefined in the database, if it is the case then this component should be rendered */
     path: "/not-found",
     element: <NotFound />,
+  },
+  {
+    path: "/dashboard",
+    element: <Dashboard />,
   },
 ]);
 
