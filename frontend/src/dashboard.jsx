@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import { dashboard } from "./utils/dashboard.js";
-import { create } from "zustand";
 import { useAccessToken } from "./auth-page.jsx";
 
 const Dashboard = () => {
@@ -23,7 +22,7 @@ const Dashboard = () => {
       <h1>Token: {}</h1>
       <button
         onClick={() => {
-          console.log(accessToken);
+          dashboard(accessToken);
         }}
       >
         Click Me!

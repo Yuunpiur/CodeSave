@@ -1,25 +1,21 @@
 
 
-export const dashboard = (accessToken) => {
+export const dashboard = async (accessToken) => {
     try {
         const requestOptions = {
             method: "POST",
             credentials: "include",
-            body: JSON.stringify({
-                accessToken: accessToken
-            }),
-            headers: { "Content-Type": "application/json" }
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`
+            }
         };
-        console.log("STOP?");
 
-        /* const fetchResponse = await fetch(
+        const fetchResponse = await fetch(
             `${import.meta.env.VITE_BACKEND_URL}api/dashboard/load-all-data`,
-            requestOptions,
-        ); */
+            requestOptions
+        );
 
-        // const { accessToken } = await fetchResponse.json();
-
-        // return accessToken;
     } catch (error) {
         console.error(error);
     }
