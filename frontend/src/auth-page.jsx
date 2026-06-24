@@ -2,6 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp, login } from "./utils/register";
 import "./main.css"; // Reusing your global styles
+import { create } from "zustand";
+
+export const useAccessToken = create((set) => ({
+  accessToken: "",
+  updateAccessToken: (accessToken) => set({ accessToken: accessToken }),
+}));
 
 const AuthPage = () => {
   const navigate = useNavigate();
@@ -11,7 +17,10 @@ const AuthPage = () => {
     password: "",
     confirmPassword: "",
   });
-  const [accessToken, setAccessToken] = useState("");
+
+  // zustand variables
+  const accessToken = useAccessToken((state) => state.accessToken);
+  const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
 
   const handleChange = (e) => {
     setFormData({
@@ -31,7 +40,7 @@ const AuthPage = () => {
 
       const jwt = await login(formData.email, formData.password);
       if (jwt) {
-        setAccessToken(jwt);
+        updateAccessToken(jwt);
 
         // load the page and the users data
         navigate("/dashboard");
@@ -40,7 +49,7 @@ const AuthPage = () => {
       const jwt = await signUp(formData.email, formData.password);
 
       if (jwt) {
-        setAccessToken(jwt);
+        updateAccessToken(jwt);
 
         // load the page and the users data
         navigate("/dashboard");
