@@ -6,6 +6,7 @@ import generateJWT from "./utils/generate-jwt.js";
 import authenticationRouter from "./routes/route-authenticate.js"
 import dashboardRouter from "./routes/route-dashboard.js"
 import cookieParser from "cookie-parser";
+import verifyJWT from "./utils/verifiy-jwt.js";
 
 export const app = express();
 
@@ -20,7 +21,10 @@ app.use(cookieParser())
 app.use("/api/code", codeInfoRouter);
 app.use("/api/version", versionInfoRouter);
 app.use("/api/authenticate", authenticationRouter)
-app.use("/api/dashboard", dashboardRouter)
+app.use("/api/dashboard", verifyJWT, dashboardRouter)
+
+
+
 
 app.listen(process.env.PORT, () => {
     console.log("SERVER IS RUNNING");
