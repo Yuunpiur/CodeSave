@@ -5,6 +5,7 @@ import versionInfoRouter from "./routes/route-version-info.js";
 import generateJWT from "./utils/generate-jwt.js";
 import authenticationRouter from "./routes/route-authenticate.js"
 import dashboardRouter from "./routes/route-dashboard.js"
+import cookieParser from "cookie-parser";
 
 export const app = express();
 
@@ -15,6 +16,7 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
+app.use(cookieParser())
 app.use("/api/code", codeInfoRouter);
 app.use("/api/version", versionInfoRouter);
 app.use("/api/authenticate", authenticationRouter)
