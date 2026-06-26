@@ -16,8 +16,8 @@ export const signUp = async (email, password) => {
             const lowerCaseEmail = email.toLowerCase();
             const insertQueryResult = await db.query("INSERT INTO USER_INFO (user_id, email, password) VALUES($1, $2, $3)", [userID, lowerCaseEmail, hashedPassword]);
 
-            const accessToken = generateJWT(email, "15m");
-            const refreshToken = generateJWT(email, "7d");
+            const accessToken = generateJWT(email, "15m", process.env.JWT_ACCESS_SECRET);
+            const refreshToken = generateJWT(email, "7d", process.env.JWT_REFRESH_SECRET);
             return { accessToken: accessToken, refreshToken: refreshToken };
         }
 
@@ -46,8 +46,8 @@ export const login = async (email, plainTextPassword) => {
         const passwordMatch = await bcrypt.compare(plainTextPassword, hashedPassword);
 
         if (passwordMatch) {
-            const accessToken = generateJWT(email, "15m");
-            const refreshToken = generateJWT(email, "7d");
+            const accessToken = generateJWT(email, "15m", process.env.JWT_ACCESS_SECRET);
+            const refreshToken = generateJWT(email, "7d", process.env.JWT_REFRESH_SECRET);
             return { accessToken: accessToken, refreshToken: refreshToken };  // LOG IN
         }
         else {
