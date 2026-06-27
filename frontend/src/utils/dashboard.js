@@ -14,6 +14,9 @@ export const dashboard = async (accessToken) => {
             requestOptions
         );
 
+        const { newAccessToken } = await fetchResponse.json();
+        return newAccessToken;
+
     } catch (error) {
         console.error(error);
     }

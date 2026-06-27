@@ -6,6 +6,10 @@ const Dashboard = () => {
   const accessToken = useAccessToken((state) => state.accessToken);
   const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
 
+  useEffect(() => {
+    console.log(accessToken);
+  }, [accessToken]);
+
   return (
     <div
       style={{
@@ -21,8 +25,11 @@ const Dashboard = () => {
     >
       <h1>Token: {}</h1>
       <button
-        onClick={() => {
-          dashboard(accessToken);
+        onClick={async () => {
+          const newAccessToken = await dashboard(accessToken);
+          if (newAccessToken) {
+            updateAccessToken(newAccessToken);
+          }
         }}
       >
         Click Me!
