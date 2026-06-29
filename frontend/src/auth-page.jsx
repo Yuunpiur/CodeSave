@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp, login } from "./utils/register";
-import "./main.css"; // Reusing your global styles
+import "./main.css";
 import { create } from "zustand";
 
 export const useAccessToken = create((set) => ({
@@ -18,7 +18,6 @@ const AuthPage = () => {
     confirmPassword: "",
   });
 
-  // zustand variables
   const accessToken = useAccessToken((state) => state.accessToken);
   const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
 
@@ -36,8 +35,6 @@ const AuthPage = () => {
       return;
     }
     if (isLogin) {
-      console.log("LOGGIN IN..");
-
       const jwt = await login(formData.email, formData.password);
       if (jwt) {
         updateAccessToken(jwt);
