@@ -20,11 +20,9 @@ export const signUp = async (email, password) => {
             const refreshToken = generateJWT(email, "7d", process.env.JWT_REFRESH_SECRET);
             return { accessToken: accessToken, refreshToken: refreshToken };
         }
-
         else {
             return { JWT: undefined };
         }
-
     }
     catch (error) {
         console.error("service", error);
