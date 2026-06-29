@@ -60,5 +60,3 @@ export const login = async (email, plainTextPassword) => {
     }
 
 };
-
-/* generateJWT(); */

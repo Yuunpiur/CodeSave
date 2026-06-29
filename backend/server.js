@@ -18,12 +18,11 @@ app.use(cors({
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
 app.use(express.json());
-app.use(cookieParser())
+app.use(cookieParser()); // parsing http only cookies
 app.use("/api/code", codeInfoRouter);
 app.use("/api/version", versionInfoRouter);
 app.use("/api/authenticate", authenticationRouter)
 app.use("/api/dashboard", verifyJWT, attachNewAccessToken, dashboardRouter)
-
 
 
 app.listen(process.env.PORT, () => {
