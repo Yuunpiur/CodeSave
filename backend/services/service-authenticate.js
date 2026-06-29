@@ -22,7 +22,7 @@ export const signUp = async (email, password) => {
         }
 
         else {
-            return "";
+            return { JWT: undefined };
         }
 
     }
@@ -32,14 +32,13 @@ export const signUp = async (email, password) => {
 };
 
 
-
 export const login = async (email, plainTextPassword) => {
     try {
         const selectQueryResult = await db.query("SELECT email, password AS hashedPassword FROM USER_INFO WHERE email = $1", [email]);
         const emailExist = selectQueryResult.rows[0];
 
         if (!emailExist) {
-            return { JWT: "" }; // PROMPT AND ERROR MESSAGE, EMAIL IS INCORRECT OR DOESN'T EXIST
+            return { JWT: undefined }; // EMAIL IS INCORRECT OR DOESN'T EXIST
         }
 
         const hashedPassword = selectQueryResult.rows[0].hashedpassword;
@@ -48,10 +47,10 @@ export const login = async (email, plainTextPassword) => {
         if (passwordMatch) {
             const accessToken = generateJWT(email, "15m", process.env.JWT_ACCESS_SECRET);
             const refreshToken = generateJWT(email, "7d", process.env.JWT_REFRESH_SECRET);
-            return { accessToken: accessToken, refreshToken: refreshToken };  // LOG IN
+            return { accessToken: accessToken, refreshToken: refreshToken };  // LOG IN THE USER
         }
         else {
-            return ""; // PROMPT AND ERROR MESSAGE, PASSWORD DOESN'T MATCH
+            return { JWT: undefined }; // PASSWORD DOESN'T MATCH
         }
 
     }
