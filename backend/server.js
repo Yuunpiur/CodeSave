@@ -22,7 +22,7 @@ app.use(cookieParser()); // parsing http only cookies
 app.use("/api/code", codeInfoRouter);
 app.use("/api/version", versionInfoRouter);
 app.use("/api/authenticate", authenticationRouter)
-app.use("/api/dashboard", verifyJWT, attachNewAccessToken, dashboardRouter)
+app.use("/api/library", verifyJWT, attachNewAccessToken, libraryRouter)
 
 
 app.listen(process.env.PORT, () => {

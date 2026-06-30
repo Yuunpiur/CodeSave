@@ -1,4 +1,4 @@
-export const dashboard = async (accessToken) => {
+export const library = async (accessToken) => {
     try {
         const requestOptions = {
             method: "POST",
@@ -10,7 +10,7 @@ export const dashboard = async (accessToken) => {
         };
 
         const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/dashboard/load-all-data`,
+            `${import.meta.env.VITE_BACKEND_URL}api/library/load-all-data`,
             requestOptions
         );
 

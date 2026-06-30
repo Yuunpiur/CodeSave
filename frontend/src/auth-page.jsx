@@ -40,7 +40,7 @@ const AuthPage = () => {
         updateAccessToken(jwt);
 
         // load the page and the users data
-        navigate("/dashboard");
+        navigate("/library");
       }
     } else if (!isLogin) {
       const jwt = await signUp(formData.email, formData.password);
@@ -49,7 +49,7 @@ const AuthPage = () => {
         updateAccessToken(jwt);
 
         // load the page and the users data
-        navigate("/dashboard");
+        navigate("/library");
       }
     }
   };

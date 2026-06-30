@@ -1,8 +1,8 @@
 import { useEffect } from "react";
-import { dashboard } from "./utils/dashboard.js";
+import { library } from "./utils/library.js";
 import { useAccessToken } from "./auth-page.jsx";
 
-const Dashboard = () => {
+const Library = () => {
   const accessToken = useAccessToken((state) => state.accessToken);
   const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
 
@@ -26,7 +26,7 @@ const Dashboard = () => {
       <h1>Token: {}</h1>
       <button
         onClick={async () => {
-          const newAccessToken = await dashboard(accessToken);
+          const newAccessToken = await library(accessToken);
           if (newAccessToken) {
             updateAccessToken(newAccessToken);
           }
@@ -38,4 +38,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default Library;

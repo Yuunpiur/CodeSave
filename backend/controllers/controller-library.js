@@ -1,4 +1,4 @@
-import * as dashboardServices from "../services/service-dashboard.js";
+import * as dashboardServices from "../services/service-library.js";
 
 
 export const loadAllDataController = async (req, res) => {
