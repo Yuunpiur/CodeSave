@@ -10,32 +10,7 @@ const Library = () => {
     console.log(accessToken);
   }, [accessToken]);
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        width: "100vw",
-        height: "100vh",
-        backgroundColor: "black",
-        zIndex: 9999,
-        color: "white",
-      }}
-    >
-      <h1>Token: {}</h1>
-      <button
-        onClick={async () => {
-          const newAccessToken = await library(accessToken);
-          if (newAccessToken) {
-            updateAccessToken(newAccessToken);
-          }
-        }}
-      >
-        Click Me!
-      </button>
-    </div>
-  );
+  return <div className="parent-container bg-[#FFFFFF]"></div>;
 };
 
 export default Library;
