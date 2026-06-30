@@ -16,19 +16,35 @@ const Library = () => {
         <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
           CodeSave
         </div>
-        <div className="auth-button-group">
-          <button
-            onClick={() => {
-              navigate("/login");
-            }}
-            className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 me-5 rounded-md w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
-          >
-            Sign Up
-          </button>
-          <button className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 rounded-md w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
-            Log In
-          </button>
+      </div>
+      {/* BACK AND FORWARD BUTTON, ANIMATION AT THE CENTER, ADD FOLDER/FILE BUTTON */}
+      <div className="">
+        <div className="previous-and-next-group h-[8%] w-full flex mt-10">
+          <div className="previous-button p-5 bg-[#dcdcdc]/30 flex items-center justify-between me-1 rounded-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#000000"
+            >
+              <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
+            </svg>
+          </div>
+          <div className="next-button p-5 bg-[#dcdcdc]/30 flex items-center justify-between rounded-lg">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              height="24px"
+              viewBox="0 -960 960 960"
+              width="24px"
+              fill="#000000"
+            >
+              <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
+            </svg>
+          </div>
         </div>
+        <div className="current-page-text"></div>
+        <div className="add-folder-or-file-button"></div>
       </div>
     </div>
   );
