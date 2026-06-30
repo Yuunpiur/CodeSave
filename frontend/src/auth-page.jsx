@@ -55,21 +55,21 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="parent-container w-screen h-screen bg-[#252525] overflow-hidden flex items-center justify-center p-4">
+    <div className="parent-container w-screen h-screen bg-white overflow-hidden flex items-center justify-center p-4">
       {/* Auth Card Container */}
-      <div className="w-full max-w-150 bg-[#586e75]/20 border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden shadow-2xl">
+      <div className="w-full max-w-150 bg-[#FFFFFF] border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden shadow-2xl">
         {/* Header Section */}
-        <div className="px-6 md:px-8 pt-7 pb-5 border-b border-[#dcdcdc]/5">
+        <div className="px-6 md:px-8 pt-7 pb-5 border-b border-[#dcdcdc]/6">
           <div
             onClick={() => navigate("/")}
             className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-2 font-noto cursor-pointer hover:text-[#ffb522] transition-colors inline-block"
           >
             ← CodeSave
           </div>
-          <h2 className="text-[26px] md:text-[28px] text-white tracking-wide font-noto font-normal">
+          <h2 className="text-[26px] md:text-[28px] text-[#252525] tracking-wide font-noto font-normal">
             {isLogin ? "Welcome Back" : "Create Account"}
           </h2>
-          <p className="text-[12px] text-white/30 tracking-wide mt-1">
+          <p className="text-[12px] text-[#252525]/40 tracking-wide mt-1">
             {isLogin
               ? "Sign in to access your saved snippets"
               : "Get started saving and sharing code snaps"}
@@ -97,7 +97,7 @@ const AuthPage = () => {
               placeholder="name@domain.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-[#586e75]/30 border border-[#dcdcdc]/10 rounded-lg text-white text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-white/20"
+              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -113,7 +113,7 @@ const AuthPage = () => {
               {isLogin && (
                 <a
                   href="#"
-                  className="text-[11px] text-white/20 hover:text-[#ffb522]/70 transition-colors tracking-wide"
+                  className="text-[11px] text-[#252525]/30 hover:text-[#ffb522]/70 transition-colors tracking-wide"
                 >
                   Forgot?
                 </a>
@@ -127,7 +127,7 @@ const AuthPage = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              className="w-full bg-[#586e75]/30 border border-[#dcdcdc]/10 rounded-lg text-white text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-white/20"
+              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -148,7 +148,7 @@ const AuthPage = () => {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full bg-[#586e75]/30 border border-[#dcdcdc]/10 rounded-lg text-white text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-white/20"
+                className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
               />
             </div>
           )}
@@ -164,7 +164,7 @@ const AuthPage = () => {
 
             {/* Form Toggle Switcher */}
             <div className="text-center">
-              <span className="text-[12px] text-white/25 tracking-wide">
+              <span className="text-[12px] text-[#252525]/40 tracking-wide">
                 {isLogin ? "New to CodeSave? " : "Already have an account? "}
               </span>
               <button
