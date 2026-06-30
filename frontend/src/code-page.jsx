@@ -117,9 +117,9 @@ const CodePage = () => {
 
   return (
     <>
-      <div className="parent-container w-screen h-screen bg-[#252525] overflow-hidden">
-        <div className="header w-full h-[7%] border-b border-[#dcdcdc]/10 flex items-center justify-between px-4 md:px-7 ">
-          <div className="logo font-noto text-[30px] md:text-[40px] text-white tracking-[0.18em] uppercase ">
+      <div className="parent-container w-screen h-screen bg-white overflow-hidden">
+        <div className="header w-full h-[7%] border border-[#dcdcdc]/10 flex items-center justify-between px-4 md:px-7 ">
+          <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
             CodeSave
           </div>
           <div className="auth-button-group">
@@ -127,11 +127,11 @@ const CodePage = () => {
               onClick={() => {
                 navigate("/login");
               }}
-              className="font-noto text-sm text-[#252525] bg-white border border-[#dcdcdc] p-1.5 me-5 rounded-md w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
+              className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 me-5 rounded-md w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
             >
               Sign Up
             </button>
-            <button className="font-noto text-sm text-[#252525] bg-white border border-[#dcdcdc] p-1.5 rounded-md w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
+            <button className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 rounded-md w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
               Log In
             </button>
           </div>
@@ -152,11 +152,11 @@ const CodePage = () => {
                   programmingLanguage.slice(1)
                 }
               />
-              <div className="code-link bg-[#586e75]/20 border border-[#dcdcdc]/10 rounded-lg h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-white/30 font-noto text-xs md:text-sm tracking-[0.14em] truncate">
+              <div className="code-link bg-[#dcdcdc]/30 border border-[#dcdcdc]/10 rounded-lg h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-[#252525]/40 font-noto text-xs md:text-sm tracking-[0.14em] truncate">
                 {codeURL}
               </div>
               <div
-                className="copy-button bg-[#586e75]/20 border border-[#dcdcdc]/10 hover:border-[#dcdcdc]/20 rounded-lg p-2 cursor-pointer transition-all duration-150 shrink-0"
+                className="copy-button bg-[#dcdcdc]/30 border border-[#dcdcdc]/10 hover:border-[#dcdcdc]/20 rounded-lg p-2 cursor-pointer transition-all duration-150 shrink-0"
                 onClick={() => {
                   copyLink(copyIconPressed, setCopyIconPressed, codeURL);
                 }}
@@ -175,10 +175,10 @@ const CodePage = () => {
             </div>
             <div className="code-editor rounded-[14px] overflow-hidden border border-[#dcdcdc]/10 flex-1 w-full">
               <Editor
-                className="w-full h-full"
+                className="w-full h-full border border-[#dcdcdc]/10 rounded-[14px]"
                 language={programmingLanguage}
                 value={`${codeEditorSourceCode}`}
-                theme="vs-dark"
+                theme="light"
                 onChange={(value) => {
                   if (!codeEditorReadOnly) {
                     debounceFunction(value, setCodeEditorSourceCode);
@@ -192,7 +192,7 @@ const CodePage = () => {
           <div className="version-history flex flex-col h-[38%] lg:h-full w-full lg:w-[22%] min-h-0">
             <div className="button-container h-8 mb-3 flex justify-between items-center shrink-0">
               <button
-                className={`undo-button bg-[#586e75]/20 hover:bg-[#586e75]/30 border border-[#dcdcdc]/10 hover:border-[#dcdcdc]/20 text-white transition-all duration-150 rounded-lg h-8 px-3 cursor-pointer flex items-center justify-center ${codeEditorReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
+                className={`undo-button bg-[#dcdcdc]/30 hover:bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 hover:border-[#dcdcdc]/20 text-[#252525] transition-all duration-150 rounded-lg h-8 px-3 cursor-pointer flex items-center justify-center ${codeEditorReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
                 disabled={!codeEditorReadOnly}
                 onClick={() => {
                   setCodeEditorSourceCode(latestSourceCode);
@@ -223,12 +223,12 @@ const CodePage = () => {
                 SAVE
               </button>
             </div>
-            <div className="all-versions bg-[#586e75]/20 border border-[#dcdcdc]/10 rounded-[14px] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
+            <div className="all-versions bg-[#dcdcdc]/30 border border-[#dcdcdc]/10 rounded-[14px] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
               {savedVersionsDetails.length > 0
                 ? savedVersionsDetails.map((versionInfo) => {
                     return (
                       <div
-                        className="version-card w-full bg-[#586e75]/30 hover:bg-[#586e75]/40 border border-[#dcdcdc]/10 hover:border-[#dcdcdc]/20 transition-all duration-150 rounded-lg cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0 relative group"
+                        className="version-card w-full bg-[#dcdcdc]/40 hover:bg-[#dcdcdc]/55 border border-[#dcdcdc]/10 hover:border-[#dcdcdc]/20 transition-all duration-150 rounded-lg cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0 relative group"
                         key={versionInfo.ver_id}
                         id={versionInfo.ver_id}
                         onClick={(e) => {
@@ -263,7 +263,7 @@ const CodePage = () => {
                         </div>
 
                         <div
-                          className="version-name text-white font-noto text-[15px] md:text-[17px] tracking-wide"
+                          className="version-name text-[#252525] font-noto text-[15px] md:text-[17px] tracking-wide"
                           id={versionInfo.ver_id}
                         >
                           {versionInfo.ver_name}
@@ -284,12 +284,12 @@ const CodePage = () => {
         {/* ! THIS IS THE POP UP */}
         {showSaveVersionPopUp ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
-            <div className="w-full max-w-85 bg-[#586e75]/20 border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden">
+            <div className="w-full max-w-85  bg-[#FFFFFF] border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden">
               <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
                 <div className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-1.5 font-noto">
                   CodeSave
                 </div>
-                <h2 className="text-[24px] md:text-[26px] text-white tracking-wide font-noto font-normal">
+                <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
                   Save Version
                 </h2>
               </div>
@@ -302,7 +302,7 @@ const CodePage = () => {
                   Version name
                 </label>
                 <input
-                  className="w-full bg-[#586e75]/30 border border-[#dcdcdc]/10 rounded-lg text-white text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide"
+                  className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide"
                   id="version-name"
                   name="version-name"
                   placeholder="e.g. auth-flow-fix"
@@ -310,14 +310,14 @@ const CodePage = () => {
                     setVersionName(e.target.value);
                   }}
                 />
-                <p className="text-[11px] text-white/25 mt-1.5 tracking-wide">
+                <p className="text-[11px] text-[#252525]/40 mt-1.5 tracking-wide">
                   Give this snapshot a meaningful name
                 </p>
               </div>
 
               <div className="px-5 md:px-7 pb-6 flex gap-2.5">
                 <button
-                  className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-white/50 hover:border-[#dcdcdc]/45 hover:text-white/85 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                  className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-[#252525]/55 hover:border-[#dcdcdc]/45 hover:text-[#252525]/90 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
                   onClick={() => {
                     setShowSaveVersionPopUp(false);
                   }}
@@ -354,18 +354,18 @@ const CodePage = () => {
 
         {showDeleteVersionPopup ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
-            <div className="w-full max-w-85 bg-[#586e75]/20 border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden">
+            <div className="w-full max-w-85 bg-[#FFFFFF] border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden">
               <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
                 <div className="text-[11px] tracking-[0.18em] uppercase text-[#f55522]/60 mb-1.5 font-noto">
                   CodeSave
                 </div>
-                <h2 className="text-[24px] md:text-[26px] text-white tracking-wide font-noto font-normal">
+                <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
                   Delete Version
                 </h2>
               </div>
 
               <div className="px-5 md:px-7 pt-5 pb-6">
-                <p className="text-[13px] text-white/40 tracking-wide leading-relaxed">
+                <p className="text-[13px] text-[#252525]/50 tracking-wide leading-relaxed">
                   This version snapshot will be permanently removed and cannot
                   be recovered.
                 </p>
@@ -373,7 +373,7 @@ const CodePage = () => {
 
               <div className="px-5 md:px-7 pb-6 flex gap-2.5">
                 <button
-                  className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-white/50 hover:border-[#dcdcdc]/45 hover:text-white/85 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                  className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-[#252525]/55 hover:border-[#dcdcdc]/45 hover:text-[#252525]/90 rounded-lg py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
                   onClick={() => setDeleteVersionPopup(false)}
                 >
                   No
