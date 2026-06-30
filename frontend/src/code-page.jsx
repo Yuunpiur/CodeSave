@@ -117,8 +117,8 @@ const CodePage = () => {
 
   return (
     <>
-      <div className="parent-container w-screen h-screen bg-white overflow-hidden">
-        <div className="header w-full h-[7%] border border-[#dcdcdc]/10 flex items-center justify-between px-4 md:px-7 ">
+      <div className="parent-container w-screen h-screen overflow-hidden">
+        <div className="header w-full h-[8%]  bg-[#fdfdfd] flex items-center justify-between px-4 ">
           <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
             CodeSave
           </div>
@@ -178,7 +178,7 @@ const CodePage = () => {
                 className="w-full h-full border border-[#dcdcdc]/10 rounded-[14px]"
                 language={programmingLanguage}
                 value={`${codeEditorSourceCode}`}
-                theme="light"
+                theme="vs-dark"
                 onChange={(value) => {
                   if (!codeEditorReadOnly) {
                     debounceFunction(value, setCodeEditorSourceCode);
@@ -360,7 +360,7 @@ const CodePage = () => {
                   CodeSave
                 </div>
                 <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
-                  Delete Version
+                  Delete Snapshot?
                 </h2>
               </div>
 
