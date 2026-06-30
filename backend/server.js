@@ -4,7 +4,7 @@ import codeInfoRouter from "./routes/route-code-info.js";
 import versionInfoRouter from "./routes/route-version-info.js";
 import generateJWT from "./utils/generate-jwt.js";
 import authenticationRouter from "./routes/route-authenticate.js"
-import dashboardRouter from "./routes/route-dashboard.js"
+import libraryRouter from "./routes/route-library.js"
 import cookieParser from "cookie-parser";
 import verifyJWT from "./middlewares/verifiy-jwt.js";
 import attachNewAccessToken from "./middlewares/attach-new-access-token.js";

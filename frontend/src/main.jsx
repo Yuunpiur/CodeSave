@@ -3,7 +3,7 @@ import { createRoot } from "react-dom/client";
 import CodePage from "./code-page";
 import NotFound from "./not-found";
 import Authpage from "./auth-page";
-import Dashboard from "./dashboard";
+import Library from "./library";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 const router = createBrowserRouter([
