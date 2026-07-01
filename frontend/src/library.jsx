@@ -20,7 +20,7 @@ const Library = () => {
       {/* BACK AND FORWARD BUTTON, ANIMATION AT THE CENTER, ADD FOLDER/FILE BUTTON */}
       <div className="">
         <div className="previous-and-next-group h-[8%] w-full flex mt-10">
-          <div className="previous-button p-5 bg-[#dcdcdc]/30 flex items-center justify-between me-1 rounded-lg">
+          <div className="previous-button p-5 bg-[#dcdcdc]/30 flex items-center justify-between me-1 rounded-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
@@ -31,7 +31,7 @@ const Library = () => {
               <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
             </svg>
           </div>
-          <div className="next-button p-5 bg-[#dcdcdc]/30 flex items-center justify-between rounded-lg">
+          <div className="next-button p-5 bg-[#dcdcdc]/30 flex items-center justify-between rounded-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               height="24px"
