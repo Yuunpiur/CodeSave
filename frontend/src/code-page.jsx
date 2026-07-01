@@ -118,7 +118,7 @@ const CodePage = () => {
   return (
     <>
       <div className="parent-container w-screen h-screen overflow-hidden">
-        <div className="header w-full h-[8%]  bg-[#fdfdfd] flex items-center justify-between px-4 border">
+        <div className="header w-full h-[8%] bg-[#fdfdfd] flex items-center justify-between px-4 border">
           <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
             CodeSave
           </div>
@@ -152,11 +152,11 @@ const CodePage = () => {
                   programmingLanguage.slice(1)
                 }
               />
-              <div className="code-link bg-[#dcdcdc]/30 border border-[#000000] h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-[#252525]/40 font-noto text-xs md:text-sm tracking-[0.14em] truncate">
+              <div className="code-link bg-[#dcdcdc]/30 border border-[#b5b5b5] h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-[#252525]/40 font-noto text-xs md:text-sm tracking-[0.14em] truncate">
                 {codeURL}
               </div>
               <div
-                className="copy-button bg-[#dcdcdc]/30 border border-[#000000] hover:border-[#dcdcdc]/20 p-2 cursor-pointer transition-all duration-150 shrink-0"
+                className="copy-button bg-[#dcdcdc]/30 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 p-2 cursor-pointer transition-all duration-150 shrink-0"
                 onClick={() => {
                   copyLink(copyIconPressed, setCopyIconPressed, codeURL);
                 }}
@@ -192,7 +192,7 @@ const CodePage = () => {
           <div className="version-history flex flex-col h-[38%] lg:h-full w-full lg:w-[22%] min-h-0">
             <div className="button-container h-8 mb-3 flex justify-between items-center shrink-0">
               <button
-                className={`undo-button bg-[#dcdcdc]/30 hover:bg-[#dcdcdc]/40 border border-[#000000] hover:border-[#dcdcdc]/20 text-[#252525] transition-all duration-150 h-8 px-3 cursor-pointer flex items-center justify-center ${codeEditorReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
+                className={`undo-button bg-[#dcdcdc]/30 hover:bg-[#dcdcdc]/40 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 text-[#252525] transition-all duration-150 h-8 px-3 cursor-pointer flex items-center justify-center ${codeEditorReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
                 disabled={!codeEditorReadOnly}
                 onClick={() => {
                   setCodeEditorSourceCode(latestSourceCode);
@@ -223,12 +223,12 @@ const CodePage = () => {
                 SAVE
               </button>
             </div>
-            <div className="all-versions bg-[#dcdcdc]/30 border border-[#000000] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
+            <div className="all-versions bg-[#dcdcdc]/30 border border-[#b5b5b5] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
               {savedVersionsDetails.length > 0
                 ? savedVersionsDetails.map((versionInfo) => {
                     return (
                       <div
-                        className="version-card w-full bg-[#dcdcdc]/40 hover:bg-[#dcdcdc]/55 border border-[#000000] hover:border-[#dcdcdc]/20 transition-all duration-150 cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0 relative group"
+                        className="version-card w-full bg-[#dcdcdc]/40 hover:bg-[#dcdcdc]/55 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 transition-all duration-150 cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0 relative group"
                         key={versionInfo.ver_id}
                         id={versionInfo.ver_id}
                         onClick={(e) => {

@@ -55,11 +55,11 @@ const AuthPage = () => {
   };
 
   return (
-    <div className="parent-container w-screen h-screen bg-white overflow-hidden flex items-center justify-center p-4">
+    <div className="parent-container w-screen h-screen bg-white overflow-hidden flex items-center justify-center p-4 ">
       {/* Auth Card Container */}
-      <div className="w-full max-w-150 bg-[#FFFFFF] border border-[#dcdcdc]/10 overflow-hidden shadow-2xl">
+      <div className="w-full max-w-150 bg-[#FFFFFF] border overflow-hidden shadow-2xl">
         {/* Header Section */}
-        <div className="px-6 md:px-8 pt-7 pb-5 border-b border-[#dcdcdc]/6">
+        <div className="px-6 md:px-8 pt-7 pb-5">
           <div
             onClick={() => navigate("/")}
             className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-2 font-noto cursor-pointer hover:text-[#ffb522] transition-colors inline-block"
@@ -97,7 +97,7 @@ const AuthPage = () => {
               placeholder="name@domain.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+              className="w-full bg-[#dcdcdc]/40 border  text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -127,7 +127,7 @@ const AuthPage = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+              className="w-full bg-[#dcdcdc]/40 border  text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -148,7 +148,7 @@ const AuthPage = () => {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+                className="w-full bg-[#dcdcdc]/40 border  text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
               />
             </div>
           )}
