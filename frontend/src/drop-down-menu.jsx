@@ -16,7 +16,7 @@ const DropDownMenu = ({ sendDataToParent, programmingLanguage }) => {
 
   return (
     <>
-      <div className="language-picker bg-[#EEE5E9] rounded-[50px] pr-1  h-full w-25 pl-2  jersey-25-regular flex items-center justify-around relative z-999">
+      <div className="language-picker bg-[#EEE5E9] pr-1  h-full w-25 pl-2  jersey-25-regular flex items-center justify-around relative z-999">
         <p>{programmingLanguage}</p>
         <button
           className="cursor-pointer"
@@ -25,11 +25,11 @@ const DropDownMenu = ({ sendDataToParent, programmingLanguage }) => {
           <IoMdArrowDropdown />
         </button>
         {activateMenu ? (
-          <div className="menu w-25 h-125 absolute bg-white left-0 top-full border border-black rounded-[10px] flex flex-col overflow-y-auto">
+          <div className="menu w-25 h-125 absolute bg-white left-0 top-full border border-black  flex flex-col overflow-y-auto">
             {Object.keys(monacoProgrammingLanguageCodes).map(
               (element, index) => (
                 <button
-                  className="w-full h-7.5 hover:bg-gray-300 rounded-[10px] cursor-pointer"
+                  className="w-full h-7.5 hover:bg-gray-300 cursor-pointer"
                   key={index}
                   onClick={(event) => {
                     console.log("drop down");

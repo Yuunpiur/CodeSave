@@ -57,7 +57,7 @@ const AuthPage = () => {
   return (
     <div className="parent-container w-screen h-screen bg-white overflow-hidden flex items-center justify-center p-4">
       {/* Auth Card Container */}
-      <div className="w-full max-w-150 bg-[#FFFFFF] border border-[#dcdcdc]/10 rounded-[14px] overflow-hidden shadow-2xl">
+      <div className="w-full max-w-150 bg-[#FFFFFF] border border-[#dcdcdc]/10 overflow-hidden shadow-2xl">
         {/* Header Section */}
         <div className="px-6 md:px-8 pt-7 pb-5 border-b border-[#dcdcdc]/6">
           <div
@@ -97,7 +97,7 @@ const AuthPage = () => {
               placeholder="name@domain.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -127,7 +127,7 @@ const AuthPage = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+              className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -148,7 +148,7 @@ const AuthPage = () => {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 rounded-lg text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+                className="w-full bg-[#dcdcdc]/40 border border-[#dcdcdc]/10 text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
               />
             </div>
           )}
@@ -157,7 +157,7 @@ const AuthPage = () => {
           <div className="mt-2 flex flex-col gap-4">
             <button
               type="submit"
-              className="w-full bg-[#ffb522] hover:bg-[#ffd15b] border-none text-[#252525] rounded-lg py-2.5 text-[14px] tracking-widest uppercase font-noto font-medium transition-all duration-150 cursor-pointer text-center"
+              className="w-full bg-[#ffb522] hover:bg-[#ffd15b] border-none text-[#252525] py-2.5 text-[14px] tracking-widest uppercase font-noto font-medium transition-all duration-150 cursor-pointer text-center"
             >
               {isLogin ? "LOG IN" : "REGISTER"}
             </button>

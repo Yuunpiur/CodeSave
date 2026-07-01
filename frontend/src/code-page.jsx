@@ -118,7 +118,7 @@ const CodePage = () => {
   return (
     <>
       <div className="parent-container w-screen h-screen overflow-hidden">
-        <div className="header w-full h-[8%]  bg-[#fdfdfd] flex items-center justify-between px-4 ">
+        <div className="header w-full h-[8%]  bg-[#fdfdfd] flex items-center justify-between px-4 border">
           <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
             CodeSave
           </div>
@@ -137,7 +137,7 @@ const CodePage = () => {
           </div>
         </div>
 
-        <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:px-4 md:pt-12 md:pb-8 h-[94%] w-full gap-3 md:gap-4 overflow-hidden">
+        <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:px-4 md:pt-12 md:pb-8 h-[92%] w-full gap-3 md:gap-4 overflow-hidden">
           <div className="code-space flex flex-col h-[60%] lg:h-full w-full lg:w-[73%]">
             <div className="code-space-header mb-3 h-[5%] min-h-9 w-full flex gap-2 md:gap-4 items-center">
               <DropDownMenu
@@ -173,9 +173,9 @@ const CodePage = () => {
                 />
               </div>
             </div>
-            <div className="code-editor rounded-[14px] overflow-hidden border border-[#000000] flex-1 w-full">
+            <div className="code-editor overflow-hidden border border-[#000000] flex-1 w-full">
               <Editor
-                className="w-full h-full border border-[#000000] rounded-[14px]"
+                className="w-full h-full border border-[#000000]"
                 language={programmingLanguage}
                 value={`${codeEditorSourceCode}`}
                 theme="vs-dark"
@@ -223,7 +223,7 @@ const CodePage = () => {
                 SAVE
               </button>
             </div>
-            <div className="all-versions bg-[#dcdcdc]/30 border border-[#000000] rounded-[14px] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
+            <div className="all-versions bg-[#dcdcdc]/30 border border-[#000000] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
               {savedVersionsDetails.length > 0
                 ? savedVersionsDetails.map((versionInfo) => {
                     return (
@@ -284,7 +284,7 @@ const CodePage = () => {
         {/* ! THIS IS THE POP UP */}
         {showSaveVersionPopUp ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
-            <div className="w-full max-w-85  bg-[#FFFFFF] border border-[#000000] rounded-[14px] overflow-hidden">
+            <div className="w-full max-w-85  bg-[#FFFFFF] border border-[#000000] overflow-hidden">
               <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
                 <div className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-1.5 font-noto">
                   CodeSave
@@ -354,7 +354,7 @@ const CodePage = () => {
 
         {showDeleteVersionPopup ? (
           <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
-            <div className="w-full max-w-85 bg-[#FFFFFF] border border-[#000000] rounded-[14px] overflow-hidden">
+            <div className="w-full max-w-85 bg-[#FFFFFF] border border-[#000000] overflow-hidden">
               <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
                 <div className="text-[11px] tracking-[0.18em] uppercase text-[#f55522]/60 mb-1.5 font-noto">
                   CodeSave
