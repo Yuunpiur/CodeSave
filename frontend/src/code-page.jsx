@@ -1,196 +1,404 @@
-import { useState, useEffect } from "react";
-import { library } from "./utils/library.js";
-import { useAccessToken } from "./auth-page.jsx";
+import { useNavigate } from "react-router-dom";
+import "./main.css";
+import "./drop-down-menu";
+import DropDownMenu from "./drop-down-menu";
+import { useEffect, useState, version } from "react";
+import Editor from "@monaco-editor/react";
+import { useParams } from "react-router-dom";
+import copyIcon from "./assets/IMAGES/ICONS/copy.svg";
+import checkIcon from "./assets/IMAGES/ICONS/check.svg";
+import {
+  addSourceCodeInfo,
+  fetchSourceCodeInfo,
+  updateSourceCodeInfo,
+  sourceCodeInfoIDExist,
+} from "./utils/code-saving.js";
 
-const PAGES = ["Folders", "Files"];
+import {
+  addVersionInfo,
+  fetchVersionsDetails,
+  fetchVersionSourceCode,
+  deleteVersion,
+} from "./utils/version-saving.js";
 
-const Library = () => {
-  const accessToken = useAccessToken((state) => state.accessToken);
-  const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
+import {
+  sendDataToCallBackUseStateVariable,
+  debounceBlock,
+  copyLink,
+  toggleSaveVersionButton,
+  disableButtonForTenSeconds,
+} from "./utils/client-utils.js";
 
-  const [pageIndex, setPageIndex] = useState(0);
-  const [direction, setDirection] = useState(1);
-  const [animKey, setAnimKey] = useState(0);
-  const [showAddPopup, setShowAddPopup] = useState(false);
-  const [folderName, setFolderName] = useState("");
+const CodePage = () => {
+  const navigate = useNavigate();
+  const [programmingLanguage, setProgrammingLanguage] = useState("javascript");
+  const [codeEditorSourceCode, setCodeEditorSourceCode] = useState("");
+  const [latestSourceCode, setLatestSourceCode] = useState("");
+  const { id: existingSourceCodeInfoID } = useParams();
+  const [sourceCodeInfoID, setSourceCodeInfoID] = useState(
+    existingSourceCodeInfoID ?? "",
+  );
+  const [codeURL, setCodeURL] = useState("");
+  const [copyIconPressed, setCopyIconPressed] = useState(false);
+  const [saveVersionButtonDisabled, setSaveVersionButtonDisabled] = useState(
+    sourceCodeInfoID == "",
+  );
+  const [showSaveVersionPopUp, setShowSaveVersionPopUp] = useState(false);
+  const [showDeleteVersionPopup, setDeleteVersionPopup] = useState(false);
+  const [versionName, setVersionName] = useState("");
+  const [savedVersionsDetails, setSavedVersionsDetails] = useState([]);
+  const [codeEditorReadOnly, setCodeEditorReadOnly] = useState(false);
+  const [versionToDeleteID, setVersionToDeleteID] = useState("");
+
+  const monacoEditorOptions = {
+    fontFamily: "'JetBrains Mono', Consolas, 'Courier New', monospace",
+    fontSize: 16,
+    readOnly: codeEditorReadOnly,
+  };
 
   useEffect(() => {
-    console.log(accessToken);
-  }, [accessToken]);
-
-  const goNext = () => {
-    if (pageIndex < PAGES.length - 1) {
-      setDirection(1);
-      setPageIndex((prev) => prev + 1);
-      setAnimKey((prev) => prev + 1);
+    if (sourceCodeInfoID != "") {
+      (async () => {
+        if (await sourceCodeInfoIDExist(sourceCodeInfoID)) {
+          setCodeURL(`${import.meta.env.VITE_FRONTEND_URL}${sourceCodeInfoID}`);
+          (async () => {
+            const sourceCodeInfo = await fetchSourceCodeInfo(sourceCodeInfoID);
+            setLatestSourceCode(sourceCodeInfo.codeEditorSourceCode);
+            setCodeEditorSourceCode(sourceCodeInfo.codeEditorSourceCode);
+            setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
+          })();
+        } else {
+          navigate("/not-found");
+        }
+      })();
     }
-  };
+  }, [sourceCodeInfoID]);
 
-  const goPrev = () => {
-    if (pageIndex > 0) {
-      setDirection(-1);
-      setPageIndex((prev) => prev - 1);
-      setAnimKey((prev) => prev + 1);
+  useEffect(() => {
+    if (!sourceCodeInfoID && codeEditorSourceCode != "") {
+      (async () => {
+        setSourceCodeInfoID(
+          await addSourceCodeInfo(codeEditorSourceCode, programmingLanguage),
+        );
+        console.log("! ADD SOURCE CODE");
+        setSaveVersionButtonDisabled(false);
+      })();
     }
-  };
+  }, [codeEditorSourceCode]);
 
-  const handleAdd = () => {
-    if (folderName.trim() === "") return;
-    // TODO: call your add folder/file util here
-    console.log(`Adding ${PAGES[pageIndex]}: ${folderName}`);
-    setFolderName("");
-    setShowAddPopup(false);
-  };
+  useEffect(() => {
+    if (sourceCodeInfoID && codeEditorSourceCode != "" && !codeEditorReadOnly) {
+      setLatestSourceCode(codeEditorSourceCode);
+      updateSourceCodeInfo(codeEditorSourceCode, sourceCodeInfoID);
+    }
+  }, [codeEditorSourceCode]);
+
+  useEffect(() => {
+    toggleSaveVersionButton(
+      codeEditorSourceCode,
+      setSaveVersionButtonDisabled,
+      codeEditorReadOnly,
+      sourceCodeInfoID,
+    );
+  }, [codeEditorSourceCode, sourceCodeInfoID]);
+
+  useEffect(() => {
+    if (sourceCodeInfoID) {
+      (async () => {
+        setSavedVersionsDetails(await fetchVersionsDetails(sourceCodeInfoID));
+        console.log(savedVersionsDetails);
+      })();
+    }
+  }, [sourceCodeInfoID]);
+
+  useEffect(() => {}, [codeEditorReadOnly]);
+
+  const debounceFunction = debounceBlock(2000);
 
   return (
-    <div className="parent-container bg-[#FFFFFF] h-screen">
-      <style>{`
-        @keyframes slide-from-bottom {
-          from { transform: translateY(110%); opacity: 0; }
-          to   { transform: translateY(0%);   opacity: 1; }
-        }
-        @keyframes slide-from-top {
-          from { transform: translateY(-110%); opacity: 0; }
-          to   { transform: translateY(0%);    opacity: 1; }
-        }
-        .anim-up   { animation: slide-from-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-        .anim-down { animation: slide-from-top    0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
-      `}</style>
-
-      <div className="header w-full bg-[#fdfdfd] flex items-center justify-between px-4 border">
-        <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase">
-          CodeSave
-        </div>
-      </div>
-
-      <div className="mx-10 mt-15 mb-2 flex items-center justify-between">
-        <div className="previous-and-next-group flex">
-          <div
-            onClick={goPrev}
-            className="previous-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between me-5 cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20px"
-              viewBox="0 -960 960 960"
-              width="20px"
-              fill="#000000"
-            >
-              <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
-            </svg>
+    <>
+      <div className="parent-container w-screen h-screen overflow-hidden">
+        <div className="header w-full h-[8%] bg-[#fdfdfd] flex items-center justify-between px-4 border">
+          <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
+            CodeSave
           </div>
-          <div
-            onClick={goNext}
-            className="next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              height="20px"
-              viewBox="0 -960 960 960"
-              width="20px"
-              fill="#000000"
+          <div className="auth-button-group">
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+              className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 me-5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
             >
-              <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
-            </svg>
+              Sign Up
+            </button>
+            <button className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
+              Log In
+            </button>
           </div>
         </div>
 
-        {/* Animated page label */}
-        <div
-          className="current-page-text-container font-noto text-[50px] md:text-[60px] text-[#252525] font-bold"
-          style={{ overflow: "hidden", lineHeight: "1.1em", height: "1.1em" }}
-        >
-          <span
-            key={animKey}
-            className={direction === 1 ? "anim-up" : "anim-down"}
-            style={{ display: "block" }}
-          >
-            {PAGES[pageIndex]}
-          </span>
-        </div>
-
-        <div
-          onClick={() => setShowAddPopup(true)}
-          className="add-folder-or-file-button p-2 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            height="40px"
-            viewBox="0 -960 960 960"
-            width="30px"
-            fill="#434343"
-          >
-            <path d="M440-440H200v-80h240v-240h80v240h240v80H520v240h-80v-240Z" />
-          </svg>
-        </div>
-      </div>
-
-      <div className="folders-and-files-container h-[70%] border border-black mx-10"></div>
-
-      {/* Add Folder / File Popup */}
-      {showAddPopup && (
-        <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
-          <div className="w-full max-w-85 bg-[#FFFFFF] border border-[#000000] overflow-hidden">
-            {/* Header */}
-            <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
-              <div className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-1.5 font-noto">
-                CodeSave
-              </div>
-              <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
-                New {pageIndex === 0 ? "Folder" : "File"}
-              </h2>
-            </div>
-
-            {/* Input */}
-            <div className="px-5 md:px-7 pt-5 pb-6">
-              <label
-                className="block text-[11px] tracking-[0.14em] uppercase text-[#ffb522]/70 mb-2 font-noto"
-                htmlFor="folder-name"
-              >
-                {pageIndex === 0 ? "Folder" : "File"} name
-              </label>
-              <input
-                className="w-full bg-[#dcdcdc]/40 border border-[#000000] text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide"
-                id="folder-name"
-                name="folder-name"
-                placeholder={
-                  pageIndex === 0 ? "e.g. my-project" : "e.g. main.js"
+        <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:px-4 md:pt-12 md:pb-8 h-[92%] w-full gap-3 md:gap-4 overflow-hidden">
+          <div className="code-space flex flex-col h-[60%] lg:h-full w-full lg:w-[73%]">
+            <div className="code-space-header mb-3 h-[5%] min-h-9 w-full flex gap-2 md:gap-4 items-center">
+              <DropDownMenu
+                sendDataToParent={() => {
+                  sendDataToCallBackUseStateVariable(
+                    programmingLanguage,
+                    setProgrammingLanguage,
+                  );
+                }}
+                programmingLanguage={
+                  programmingLanguage.charAt(0).toUpperCase() +
+                  programmingLanguage.slice(1)
                 }
-                value={folderName}
-                onChange={(e) => setFolderName(e.target.value)}
-                onKeyDown={(e) => e.key === "Enter" && handleAdd()}
-                autoFocus
               />
-              <p className="text-[11px] text-[#252525]/40 mt-1.5 tracking-wide">
-                Give this {pageIndex === 0 ? "folder" : "file"} a meaningful
-                name
-              </p>
-            </div>
-
-            {/* Actions */}
-            <div className="px-5 md:px-7 pb-6 flex gap-2.5">
-              <button
-                className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-[#252525]/55 hover:border-[#dcdcdc]/45 hover:text-[#252525]/90 py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+              <div className="code-link bg-[#dcdcdc]/30 border border-[#b5b5b5] h-full px-3 md:px-4 flex items-center flex-1 min-w-0 text-[#252525]/40 font-noto text-xs md:text-sm tracking-[0.14em] truncate">
+                {codeURL}
+              </div>
+              <div
+                className="copy-button bg-[#dcdcdc]/30 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 p-2 cursor-pointer transition-all duration-150 shrink-0"
                 onClick={() => {
-                  setFolderName("");
-                  setShowAddPopup(false);
+                  copyLink(copyIconPressed, setCopyIconPressed, codeURL);
                 }}
               >
-                Exit
+                <img
+                  className="copy-icon w-4 h-4"
+                  src={copyIcon}
+                  alt="copy-icon"
+                />
+                <img
+                  className="check-icon hidden w-4 h-4"
+                  src={checkIcon}
+                  alt="check-icon"
+                />
+              </div>
+            </div>
+            <div className="code-editor overflow-hidden border border-[#000000] flex-1 w-full">
+              <Editor
+                className="w-full h-full border border-[#000000]"
+                language={programmingLanguage}
+                value={`${codeEditorSourceCode}`}
+                theme="vs-dark"
+                onChange={(value) => {
+                  if (!codeEditorReadOnly) {
+                    debounceFunction(value, setCodeEditorSourceCode);
+                  }
+                }}
+                options={monacoEditorOptions}
+              />
+            </div>
+          </div>
+
+          <div className="version-history flex flex-col h-[38%] lg:h-full w-full lg:w-[22%] min-h-0">
+            <div className="button-container h-8 mb-3 flex justify-between items-center shrink-0">
+              <button
+                className={`undo-button bg-[#dcdcdc]/30 hover:bg-[#dcdcdc]/40 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 text-[#252525] transition-all duration-150 h-8 px-3 cursor-pointer flex items-center justify-center ${codeEditorReadOnly ? "cursor-pointer" : "opacity-40 cursor-not-allowed"}`}
+                disabled={!codeEditorReadOnly}
+                onClick={() => {
+                  setCodeEditorSourceCode(latestSourceCode);
+                  setCodeEditorReadOnly(false);
+                }}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="15"
+                  height="15"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M3 7v6h6" />
+                  <path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13" />
+                </svg>
               </button>
               <button
-                className={`flex-1 bg-[#ffb522] hover:bg-[#ffd15b] border-none text-[#252525] py-2.5 text-[15px] tracking-widest uppercase font-noto font-medium transition-all duration-150 ${folderName.trim() === "" ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
-                disabled={folderName.trim() === ""}
-                onClick={handleAdd}
+                className={`save-button bg-[#ffb522] hover:bg-[#ffd15b] text-[#252525] transition-all duration-150 h-8 px-5 font-noto tracking-widest text-[13px] uppercase font-medium
+             ${saveVersionButtonDisabled ? "opacity-40 cursor-not-allowed" : "cursor-pointer"}`}
+                disabled={saveVersionButtonDisabled}
+                onClick={() => setShowSaveVersionPopUp(true)}
               >
-                Create
+                SAVE
               </button>
+            </div>
+            <div className="all-versions bg-[#dcdcdc]/30 border border-[#b5b5b5] flex-1 overflow-y-auto flex flex-col gap-2 p-3 min-h-0">
+              {savedVersionsDetails.length > 0
+                ? savedVersionsDetails.map((versionInfo) => {
+                    return (
+                      <div
+                        className="version-card w-full bg-[#dcdcdc]/40 hover:bg-[#dcdcdc]/55 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 transition-all duration-150 cursor-pointer flex flex-col justify-center items-start px-4 md:px-5 py-3 md:py-4 shrink-0 relative group"
+                        key={versionInfo.ver_id}
+                        id={versionInfo.ver_id}
+                        onClick={(e) => {
+                          setCodeEditorReadOnly(true);
+                          (async () => {
+                            setCodeEditorSourceCode(
+                              await fetchVersionSourceCode(e.target.id),
+                            );
+                          })();
+                        }}
+                      >
+                        <div
+                          className="delete-button-container"
+                          onClick={(e) => {
+                            setVersionToDeleteID(e.target.id);
+                            e.stopPropagation();
+                            setDeleteVersionPopup(true);
+                            /*     setSaveVersionButtonDisabled(true); */
+                          }}
+                          id={versionInfo.ver_id}
+                        >
+                          <button
+                            className="delete-button absolute top-2.5 right-2.5 w-6 h-6 rounded-md bg-transparent hover:bg-[#f55522]/15 border border-transparent hover:border-[#f55522]/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-150 cursor-pointer"
+                            id={versionInfo.ver_id}
+                          ></button>
+                          <button
+                            className="absolute top-2.5 right-2.5 w-6 h-6 rounded-md bg-transparent hover:bg-[#f55522]/15 border border-transparent hover:border-[#f55522]/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-150 cursor-pointer text-[#f55522] text-[13px]"
+                            id={versionInfo.ver_id}
+                          >
+                            ✕
+                          </button>
+                        </div>
+
+                        <div
+                          className="version-name text-[#252525] font-noto text-[15px] md:text-[17px] tracking-wide"
+                          id={versionInfo.ver_id}
+                        >
+                          {versionInfo.ver_name}
+                        </div>
+                        <div
+                          className="created-date-time text-[#ffb522]/50 font-noto text-[11px] tracking-[0.14em] uppercase mt-1"
+                          id={versionInfo.ver_id}
+                        >
+                          {versionInfo.created_at}
+                        </div>
+                      </div>
+                    );
+                  })
+                : null}
             </div>
           </div>
         </div>
-      )}
-    </div>
+        {/* ! THIS IS THE POP UP */}
+        {showSaveVersionPopUp ? (
+          <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
+            <div className="w-full max-w-85  bg-[#FFFFFF] border border-[#000000] overflow-hidden">
+              <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
+                <div className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-1.5 font-noto">
+                  CodeSave
+                </div>
+                <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
+                  Save Version
+                </h2>
+              </div>
+
+              <div className="px-5 md:px-7 pt-5 pb-6">
+                <label
+                  className="block text-[11px] tracking-[0.14em] uppercase text-[#ffb522]/70 mb-2 font-noto"
+                  htmlFor="version-name"
+                >
+                  Version name
+                </label>
+                <input
+                  className="w-full bg-[#dcdcdc]/40 border border-[#000000] text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide"
+                  id="version-name"
+                  name="version-name"
+                  placeholder="e.g. auth-flow-fix"
+                  onChange={(e) => {
+                    setVersionName(e.target.value);
+                  }}
+                />
+                <p className="text-[11px] text-[#252525]/40 mt-1.5 tracking-wide">
+                  Give this snapshot a meaningful name
+                </p>
+              </div>
+
+              <div className="px-5 md:px-7 pb-6 flex gap-2.5">
+                <button
+                  className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-[#252525]/55 hover:border-[#dcdcdc]/45 hover:text-[#252525]/90 py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                  onClick={() => {
+                    setShowSaveVersionPopUp(false);
+                  }}
+                >
+                  Exit
+                </button>
+                <button
+                  className="flex-1 bg-[#ffb522] hover:bg-[#ffd15b] border-none text-[#252525] py-2.5 text-[15px] tracking-widest uppercase font-noto font-medium transition-all duration-150 cursor-pointer"
+                  disabled={versionName == ""}
+                  onClick={() => {
+                    setShowSaveVersionPopUp(false);
+                    disableButtonForTenSeconds(setSaveVersionButtonDisabled);
+
+                    (async () => {
+                      const versionInfo = await addVersionInfo(
+                        codeEditorSourceCode,
+                        versionName,
+                        sourceCodeInfoID,
+                        saveVersionButtonDisabled,
+                      );
+
+                      setSavedVersionsDetails(
+                        await fetchVersionsDetails(sourceCodeInfoID),
+                      );
+                    })();
+                  }}
+                >
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+
+        {showDeleteVersionPopup ? (
+          <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
+            <div className="w-full max-w-85 bg-[#FFFFFF] border border-[#000000] overflow-hidden">
+              <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
+                <div className="text-[11px] tracking-[0.18em] uppercase text-[#f55522]/60 mb-1.5 font-noto">
+                  CodeSave
+                </div>
+                <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
+                  Delete Snapshot?
+                </h2>
+              </div>
+
+              <div className="px-5 md:px-7 pt-5 pb-6">
+                <p className="text-[13px] text-[#252525]/50 tracking-wide leading-relaxed">
+                  This version snapshot will be permanently removed and cannot
+                  be recovered.
+                </p>
+              </div>
+
+              <div className="px-5 md:px-7 pb-6 flex gap-2.5">
+                <button
+                  className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-[#252525]/55 hover:border-[#dcdcdc]/45 hover:text-[#252525]/90 py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                  onClick={() => setDeleteVersionPopup(false)}
+                >
+                  No
+                </button>
+                <button
+                  className="flex-1 bg-[#f55522]/15 hover:bg-[#f55522]/25 border border-[#f55522]/30 hover:border-[#f55522]/50 text-[#f55522] py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                  onClick={() => {
+                    setDeleteVersionPopup(false);
+                    (async () => {
+                      await deleteVersion(versionToDeleteID);
+                      setSavedVersionsDetails(
+                        await fetchVersionsDetails(sourceCodeInfoID),
+                      );
+                    })();
+                  }}
+                >
+                  Yes
+                </button>
+              </div>
+            </div>
+          </div>
+        ) : null}
+      </div>
+    </>
   );
 };
 
-export default Library;
+export default CodePage;
