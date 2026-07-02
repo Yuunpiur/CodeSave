@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { library } from "./utils/library.js";
 import { useAccessToken } from "./auth-page.jsx";
+import { useNavigate } from "react-router-dom";
 
 const PAGES = ["Folders", "Files"];
 
 const Library = () => {
+  const navigate = useNavigate();
   const accessToken = useAccessToken((state) => state.accessToken);
   const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
 
@@ -184,6 +186,11 @@ const Library = () => {
             <div
               key={item.id}
               className={`${pageIndex == 0 ? "folders" : "files"} flex justify-around`}
+              onClick={() => {
+                if (pageIndex == 1) {
+                  navigate("/");
+                }
+              }}
             >
               {/* Delete button */}
               <button

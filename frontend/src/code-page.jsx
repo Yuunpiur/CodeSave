@@ -7,6 +7,8 @@ import Editor from "@monaco-editor/react";
 import { useParams } from "react-router-dom";
 import copyIcon from "./assets/IMAGES/ICONS/copy.svg";
 import checkIcon from "./assets/IMAGES/ICONS/check.svg";
+import { useAccessToken } from "./auth-page.jsx";
+
 import {
   addSourceCodeInfo,
   fetchSourceCodeInfo,
@@ -30,6 +32,7 @@ import {
 } from "./utils/client-utils.js";
 
 const CodePage = () => {
+  const accessToken = useAccessToken((state) => state.accessToken);
   const navigate = useNavigate();
   const [programmingLanguage, setProgrammingLanguage] = useState("javascript");
   const [codeEditorSourceCode, setCodeEditorSourceCode] = useState("");
@@ -122,19 +125,21 @@ const CodePage = () => {
           <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
             CodeSave
           </div>
-          <div className="auth-button-group">
-            <button
-              onClick={() => {
-                navigate("/login");
-              }}
-              className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 me-5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
-            >
-              Sign Up
-            </button>
-            <button className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
-              Log In
-            </button>
-          </div>
+          {accessToken ? null : (
+            <div className="auth-button-group">
+              <button
+                onClick={() => {
+                  navigate("/login");
+                }}
+                className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 me-5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
+              >
+                Sign Up
+              </button>
+              <button className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
+                Log In
+              </button>
+            </div>
+          )}
         </div>
 
         <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:px-4 md:pt-12 md:pb-8 h-[92%] w-full gap-3 md:gap-4 overflow-hidden">
@@ -269,7 +274,7 @@ const CodePage = () => {
                           {versionInfo.ver_name}
                         </div>
                         <div
-                          className="created-date-time text-[#ffb522]/50 font-noto text-[11px] tracking-[0.14em] uppercase mt-1"
+                          className="created-date-time text-[#575757] font-noto text-[11px] tracking-[0.14em] uppercase mt-1"
                           id={versionInfo.ver_id}
                         >
                           {versionInfo.created_at}

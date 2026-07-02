@@ -62,7 +62,7 @@ const AuthPage = () => {
         <div className="px-6 md:px-8 pt-7 pb-5">
           <div
             onClick={() => navigate("/")}
-            className="text-[11px] tracking-[0.18em] uppercase text-[#ffb522]/60 mb-2 font-noto cursor-pointer hover:text-[#ffb522] transition-colors inline-block"
+            className="text-[11px] tracking-[0.18em] uppercase mb-2 font-noto cursor-pointer  transition-colors inline-block"
           >
             ← CodeSave
           </div>
@@ -85,7 +85,7 @@ const AuthPage = () => {
           <div className="flex flex-col">
             <label
               htmlFor="email"
-              className="text-[11px] tracking-[0.14em] uppercase text-[#ffb522]/70 mb-2 font-noto"
+              className="text-[11px] tracking-[0.14em] uppercase text-black mb-2 font-noto"
             >
               Email Address
             </label>
@@ -97,7 +97,7 @@ const AuthPage = () => {
               placeholder="name@domain.com"
               value={formData.email}
               onChange={handleChange}
-              className="w-full bg-[#dcdcdc]/40 border  text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+              className="w-full bg-[#dcdcdc]/40 text-[#252525] text-sm px-3.5 py-2.5 outline-none transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -106,14 +106,14 @@ const AuthPage = () => {
             <div className="flex justify-between items-center mb-2">
               <label
                 htmlFor="password"
-                className="text-[11px] tracking-[0.14em] uppercase text-[#ffb522]/70 font-noto"
+                className="text-[11px] tracking-[0.14em] uppercase text-black font-noto"
               >
                 Password
               </label>
               {isLogin && (
                 <a
                   href="#"
-                  className="text-[11px] text-[#252525]/30 hover:text-[#ffb522]/70 transition-colors tracking-wide"
+                  className="text-[11px] text-[#252525]/30 hover:text-black transition-colors tracking-wide"
                 >
                   Forgot?
                 </a>
@@ -127,7 +127,7 @@ const AuthPage = () => {
               placeholder="••••••••"
               value={formData.password}
               onChange={handleChange}
-              className="w-full bg-[#dcdcdc]/40 border  text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+              className="w-full bg-[#dcdcdc]/40 text-[#252525] text-sm px-3.5 py-2.5 outline-none transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
           </div>
 
@@ -136,7 +136,7 @@ const AuthPage = () => {
             <div className="flex flex-col transition-all duration-200">
               <label
                 htmlFor="confirmPassword"
-                className="text-[11px] tracking-[0.14em] uppercase text-[#ffb522]/70 mb-2 font-noto"
+                className="text-[11px] tracking-[0.14em] uppercase text-black mb-2 font-noto"
               >
                 Confirm Password
               </label>
@@ -148,7 +148,7 @@ const AuthPage = () => {
                 placeholder="••••••••"
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                className="w-full bg-[#dcdcdc]/40 border  text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide placeholder-[#252525]/30"
+                className="w-full bg-[#dcdcdc]/40 text-[#252525] text-sm px-3.5 py-2.5 outline-none transition-colors font-noto tracking-wide placeholder-[#252525]/30"
               />
             </div>
           )}
@@ -173,7 +173,7 @@ const AuthPage = () => {
                   setIsLogin(!isLogin);
                   setFormData({ email: "", password: "", confirmPassword: "" });
                 }}
-                className="text-[12px] text-[#ffb522]/70 hover:text-[#ffb522] transition-colors font-medium underline underline-offset-4 bg-transparent border-none cursor-pointer p-0 inline"
+                className="text-[12px] text-black hover:text-[#ffb522] transition-colors font-medium underline underline-offset-4 bg-transparent border-none cursor-pointer p-0 inline"
               >
                 {isLogin ? "Create an account" : "Sign in here"}
               </button>
