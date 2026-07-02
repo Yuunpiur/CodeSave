@@ -75,6 +75,37 @@ const Library = () => {
         }
         .anim-up   { animation: slide-from-bottom 0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
         .anim-down { animation: slide-from-top    0.3s cubic-bezier(0.4, 0, 0.2, 1) forwards; }
+        .folders { }
+        .files { 
+                  width: 100%;
+                  background-color: rgba(220, 220, 220, 0.4);
+                  border: 1px solid #b5b5b5;
+                  transition: all 150ms;
+                  cursor: pointer;
+                  padding: 20px 20px;
+                  position: relative;
+                  display: inline-block;
+                  margin: 4px;
+}
+
+        .folders { 
+                  width: 250px;
+                  height: 150px;
+        
+                  background-color: rgba(220, 220, 220, 0.4);
+                  border: 1px solid #b5b5b5;
+                  transition: all 150ms;
+                  cursor: pointer;
+                  padding: 25px;
+                  flex-shrink: 0;
+                  position: relative;
+                  display: inline-block;
+                  margin: 4px;
+}
+
+        .files:hover, .folders:hover {
+          border-color: rgba(220, 220, 220, 0.2);
+        }
       `}</style>
 
       <div className="header w-full bg-[#fdfdfd] flex items-center justify-between px-4 border">
@@ -145,12 +176,14 @@ const Library = () => {
       </div>
 
       {/* Folders / Files container */}
-      <div className="folders-and-files-container h-[70%] border border-black mx-10 overflow-y-auto flex flex-col gap-2 p-3">
+      <div
+        className={`${visibleItems.length > 0 ? "folders-and-files-container h-[70%] border border-black mx-10 overflow-y-auto gap-2 p-3" : "folders-and-files-container h-[70%] border border-black mx-10 overflow-y-auto gap-2 p-3 flex justify-between items-center"}`}
+      >
         {visibleItems.length > 0 ? (
           visibleItems.map((item) => (
             <div
               key={item.id}
-              className="w-full bg-[#dcdcdc]/40 hover:bg-[#dcdcdc]/55 border border-[#b5b5b5] hover:border-[#dcdcdc]/20 transition-all duration-150 cursor-pointer flex flex-col justify-center items-start px-5 py-4 shrink-0 relative group"
+              className={`${pageIndex == 0 ? "folders" : "files"} flex justify-around`}
             >
               {/* Delete button */}
               <button
@@ -163,10 +196,10 @@ const Library = () => {
                 ✕
               </button>
 
-              <div className="text-[#252525] font-noto text-[17px] tracking-wide">
+              <div className="text-[#252525] font-noto text-[17px] tracking-wide mb-15">
                 {item.name}
               </div>
-              <div className="text-[#ffb522]/50 font-noto text-[11px] tracking-[0.14em] uppercase mt-1">
+              <div className="text-[#575757] font-noto text-[11px] tracking-[0.14em] uppercase">
                 {item.createdAt}
               </div>
             </div>
