@@ -1,9 +1,9 @@
-export const signUp = async (email, password) => {
+export const signUp = async (username, password) => {
     try {
         const requestOptions = {
             method: "POST",
             body: JSON.stringify({
-                email: email,
+                username: username,
                 password: password
             }),
             headers: { "Content-Type": "application/json" }
@@ -23,12 +23,12 @@ export const signUp = async (email, password) => {
 };
 
 
-export const login = async (email, password) => {
+export const login = async (username, password) => {
     try {
         const requestOptions = {
             method: "POST",
             body: JSON.stringify({
-                email: email,
+                username: username,
                 password: password
             }),
             headers: { "Content-Type": "application/json" }

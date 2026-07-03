@@ -1,9 +1,9 @@
 import "dotenv/config";
 import jwt from "jsonwebtoken";
 
-const generateJWT = (email, expiry, JWTSecret) => {
+const generateJWT = (username, expiry, JWTSecret) => {
     const payload = {
-        email: email,
+        username: username,
         role: "user"
     };
     const signature = jwt.sign(payload, JWTSecret, { expiresIn: expiry });

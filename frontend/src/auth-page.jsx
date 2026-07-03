@@ -13,7 +13,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   const [isLogin, setIsLogin] = useState(true);
   const [formData, setFormData] = useState({
-    email: "",
+    username: "",
     password: "",
     confirmPassword: "",
   });
@@ -35,7 +35,7 @@ const AuthPage = () => {
       return;
     }
     if (isLogin) {
-      const jwt = await login(formData.email, formData.password);
+      const jwt = await login(formData.username, formData.password);
       if (jwt) {
         updateAccessToken(jwt);
 
@@ -43,7 +43,7 @@ const AuthPage = () => {
         navigate("/library");
       }
     } else if (!isLogin) {
-      const jwt = await signUp(formData.email, formData.password);
+      const jwt = await signUp(formData.username, formData.password);
 
       if (jwt) {
         updateAccessToken(jwt);
@@ -81,21 +81,21 @@ const AuthPage = () => {
           onSubmit={handleSubmit}
           className="px-6 md:px-8 pt-6 pb-8 flex flex-col gap-5"
         >
-          {/* Email input */}
+          {/* Username input */}
           <div className="flex flex-col">
             <label
-              htmlFor="email"
+              htmlFor="username"
               className="text-[11px] tracking-[0.14em] uppercase text-black mb-2 font-noto"
             >
-              Email Address
+              Username
             </label>
             <input
-              type="email"
-              id="email"
-              name="email"
+              type="text"
+              id="username"
+              name="username"
               required
-              placeholder="name@domain.com"
-              value={formData.email}
+              placeholder="Choose a username"
+              value={formData.username}
               onChange={handleChange}
               className="w-full bg-[#dcdcdc]/40 text-[#252525] text-sm px-3.5 py-2.5 outline-none transition-colors font-noto tracking-wide placeholder-[#252525]/30"
             />
@@ -171,7 +171,11 @@ const AuthPage = () => {
                 type="button"
                 onClick={() => {
                   setIsLogin(!isLogin);
-                  setFormData({ email: "", password: "", confirmPassword: "" });
+                  setFormData({
+                    username: "",
+                    password: "",
+                    confirmPassword: "",
+                  });
                 }}
                 className="text-[12px] text-black hover:text-[#ffb522] transition-colors font-medium underline underline-offset-4 bg-transparent border-none cursor-pointer p-0 inline"
               >

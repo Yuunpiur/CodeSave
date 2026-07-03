@@ -27,8 +27,8 @@ const verifyJWT = (req, res, next) => {
     catch (error) {
         // renew the access token
         console.log("invalid access token");
-        const { email } = refreshTokenPayload;
-        const newAccessToken = generateJWT(email, "15m", process.env.JWT_ACCESS_SECRET);
+        const { username } = refreshTokenPayload;
+        const newAccessToken = generateJWT(username, "15m", process.env.JWT_ACCESS_SECRET);
         res.locals.newAccessToken = newAccessToken;
     }
     // allow the request -> either all tokens are valid or access token needs to be renewed or undefined (refreshing the browser)
