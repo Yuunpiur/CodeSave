@@ -36,6 +36,7 @@ const AuthPage = () => {
     }
     if (isLogin) {
       const jwt = await login(formData.username, formData.password);
+      console.log(jwt);
       if (jwt) {
         updateAccessToken(jwt);
 

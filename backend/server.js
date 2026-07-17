@@ -8,9 +8,9 @@ import libraryRouter from "./routes/route-library.js"
 import cookieParser from "cookie-parser";
 import verifyJWT from "./middlewares/verifiy-jwt.js";
 import attachNewAccessToken from "./middlewares/attach-new-access-token.js";
+import { getAllFolders } from "./services/service-library.js";
 
 export const app = express();
-
 app.use(cors({
     origin: [process.env.FRONTEND_URL],
     methods: ["PUT", "GET", "OPTIONS", "DELETE", "POST"],
@@ -28,4 +28,3 @@ app.use("/api/library", verifyJWT, attachNewAccessToken, libraryRouter)
 app.listen(process.env.PORT, () => {
     console.log("SERVER IS RUNNING");
 })
-

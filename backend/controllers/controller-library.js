@@ -1,9 +1,11 @@
-import * as dashboardServices from "../services/service-library.js";
+import * as libraryServices from "../services/service-library.js";
 
 
-export const loadAllDataController = async (req, res) => {
+export const getAllFoldersController = async (req, res) => {
     try {
-        res.json({ allData: "s" });
+        const { username } = req.body;
+        const allFolders = await libraryServices.getAllFolders(username);
+        return allFolders;
     }
     catch (error) {
         console.error(error);

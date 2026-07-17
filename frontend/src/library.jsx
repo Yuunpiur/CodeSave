@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { library } from "./utils/library.js";
+import { getAllFolders } from "./utils/library.js";
 import { useAccessToken } from "./auth-page.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -17,9 +17,12 @@ const Library = () => {
   const [folderName, setFolderName] = useState("");
   const [items, setItems] = useState([]);
 
+  // fetch existing folders initially
   useEffect(() => {
-    console.log(accessToken);
-  }, [accessToken]);
+    (async () => {
+      const allFolders = await getAllFolders(accessToken);
+    })();
+  }, []);
 
   const goNext = () => {
     if (pageIndex < PAGES.length - 1) {
@@ -185,7 +188,7 @@ const Library = () => {
           visibleItems.map((item) => (
             <div
               key={item.id}
-              className={`${pageIndex == 0 ? "folders" : "files"} flex justify-around`}
+              className={`${pageIndex == 0 ? "folders" : "files"} flex justify-around group relative`}
               onClick={() => {
                 if (pageIndex == 1) {
                   navigate("/");

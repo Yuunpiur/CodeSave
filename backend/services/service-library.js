@@ -1,16 +1,28 @@
 import { db } from "../config/db.js";
 
-export const loadAllData = async (userID) => {
+export const getAllFolders = async (username = "hia") => {
     try {
-        // TODO: Add your database query logic here
-        // Example: Query all user data from multiple tables and return combined result
-        
         const selectQueryResult = await db.query(
-            "SELECT * FROM USER_SOURCECODE_INFO WHERE user_id = $1", 
-            [userID]
-        );
+            "SELECT folder_id, folder_name, created_at FROM USER_FOLDERS WHERE username = $1",
+            [username]);
 
-        return selectQueryResult.rows;
+
+        const allFolders = selectQueryResult.rows;
+        // Format all the created_at column date times
+        for (let i = 0; i < allFolders.length; i++) {
+            const date = allFolders[i].created_at;
+            const formattedDate = new Intl.DateTimeFormat("en-US", {
+                dateStyle: "medium",
+                timeStyle: "short",
+            }).format(date);
+            allFolders[i].created_at = formattedDate;
+        }
+
+        console.log(allFolders);
+
+        return allFolders;
+
+
     }
     catch (error) {
         console.error(error);

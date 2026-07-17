@@ -27,6 +27,7 @@ export const login = async (username, password) => {
     try {
         const requestOptions = {
             method: "POST",
+            credentials: "include",
             body: JSON.stringify({
                 username: username,
                 password: password

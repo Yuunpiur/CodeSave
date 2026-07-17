@@ -3,16 +3,18 @@ import "dotenv/config";
 import generateJWT from "../utils/generate-jwt.js";
 
 const verifyJWT = (req, res, next) => {
-    console.log(res.json.toString());
 
     // verify the refresh token
     let refreshTokenPayload = "";
     try {
         const refreshToken = req.cookies.refreshToken;
+        console.log("refreshToken", refreshToken);
+
         refreshTokenPayload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        console.log("access token is valid");
+        console.log(refreshToken);
     }
     catch (error) {
+        console.error(error);
         res.status(401).json({ message: "Invalid/Expired Token" }); // log out the user
         return;
     }
@@ -31,7 +33,7 @@ const verifyJWT = (req, res, next) => {
         const newAccessToken = generateJWT(username, "15m", process.env.JWT_ACCESS_SECRET);
         res.locals.newAccessToken = newAccessToken;
     }
-    // allow the request -> either all tokens are valid or access token needs to be renewed or undefined (refreshing the browser)
+    // allow the request -> either all tokens are valid or access token needs to be renewed
     next();
 };
 

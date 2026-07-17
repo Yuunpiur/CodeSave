@@ -4,6 +4,7 @@ const attachNewAccessToken = (req, res, next) => {
     // overwrite res.json
     // this is executed when we call res.json
     res.json = (body) => {
+        console.log("here");
         if (res.locals.newAccessToken) {
             body = { ...body, newAccessToken: res.locals.newAccessToken };
         }
