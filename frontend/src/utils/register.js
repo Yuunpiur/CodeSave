@@ -47,3 +47,6 @@ export const login = async (username, password) => {
         console.error(error);
     }
 };
+
+
+export const renewAccessToken = () => { };

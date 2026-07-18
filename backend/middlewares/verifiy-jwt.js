@@ -8,10 +8,8 @@ const verifyJWT = (req, res, next) => {
     let refreshTokenPayload = "";
     try {
         const refreshToken = req.cookies.refreshToken;
-        console.log("refreshToken", refreshToken);
 
         refreshTokenPayload = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-        console.log(refreshToken);
     }
     catch (error) {
         console.error(error);
@@ -21,14 +19,11 @@ const verifyJWT = (req, res, next) => {
 
     // verify the access token
     const accessToken = req.headers.authorization.split(' ')[1];
-    console.log("access token: ", accessToken);
     try {
         const accessTokenPayload = jwt.verify(accessToken, process.env.JWT_ACCESS_SECRET);
-        console.log("access token is valid");
     }
     catch (error) {
         // renew the access token
-        console.log("invalid access token");
         const { username } = refreshTokenPayload;
         const newAccessToken = generateJWT(username, "15m", process.env.JWT_ACCESS_SECRET);
         res.locals.newAccessToken = newAccessToken;

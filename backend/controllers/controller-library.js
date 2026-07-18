@@ -1,11 +1,12 @@
 import * as libraryServices from "../services/service-library.js";
-
+import getUsername from "../utils/get-username.js";
 
 export const getAllFoldersController = async (req, res) => {
     try {
-        const { username } = req.body;
+        const username = getUsername(req.cookies.refreshToken);
         const allFolders = await libraryServices.getAllFolders(username);
-        return allFolders;
+
+        res.json(allFolders);
     }
     catch (error) {
         console.error(error);

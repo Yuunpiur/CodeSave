@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { getAllFolders } from "./utils/library.js";
 import { useAccessToken } from "./auth-page.jsx";
 import { useNavigate } from "react-router-dom";
@@ -17,10 +17,15 @@ const Library = () => {
   const [folderName, setFolderName] = useState("");
   const [items, setItems] = useState([]);
 
-  // fetch existing folders initially
+  const foldersFetched = useRef(false);
+
   useEffect(() => {
+    if (foldersFetched.current) return;
+    foldersFetched.current = true; // set this FIRST
+
     (async () => {
       const allFolders = await getAllFolders(accessToken);
+      setItems((prev) => [...allFolders, ...prev]);
     })();
   }, []);
 
@@ -47,7 +52,7 @@ const Library = () => {
       id: crypto.randomUUID(),
       name: folderName.trim(),
       type: pageIndex === 0 ? "folder" : "file",
-      createdAt: new Date().toLocaleString("en-US", {
+      createdat: new Date().toLocaleString("en-US", {
         month: "short",
         day: "numeric",
         year: "numeric",
@@ -210,7 +215,7 @@ const Library = () => {
                 {item.name}
               </div>
               <div className="text-[#575757] font-noto text-[11px] tracking-[0.14em] uppercase">
-                {item.createdAt}
+                {item.createdat}
               </div>
             </div>
           ))

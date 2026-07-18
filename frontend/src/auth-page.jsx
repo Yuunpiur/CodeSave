@@ -36,7 +36,6 @@ const AuthPage = () => {
     }
     if (isLogin) {
       const jwt = await login(formData.username, formData.password);
-      console.log(jwt);
       if (jwt) {
         updateAccessToken(jwt);
 
@@ -45,7 +44,6 @@ const AuthPage = () => {
       }
     } else if (!isLogin) {
       const jwt = await signUp(formData.username, formData.password);
-
       if (jwt) {
         updateAccessToken(jwt);
 
