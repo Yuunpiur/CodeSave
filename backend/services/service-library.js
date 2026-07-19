@@ -17,10 +17,6 @@ export const getAllFolders = async (username) => {
             }).format(date);
             allFolders[i].createdat = formattedDate;
         }
-
-        console.log(allFolders);
-
-
         return allFolders;
 
 

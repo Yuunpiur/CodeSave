@@ -1,4 +1,4 @@
-export const getAllFolders = async (accessToken) => {
+export const getAllFolders = async (accessToken, updateAccessToken) => {
     try {
         const requestOptions = {
             method: "GET",
@@ -9,13 +9,21 @@ export const getAllFolders = async (accessToken) => {
             }
         };
 
+
         const fetchResponse = await fetch(
             `${import.meta.env.VITE_BACKEND_URL}api/library/get-all-folders`,
             requestOptions
         );
 
-        const allFolders = await fetchResponse.json();
-        return allFolders;
+        const fetchData = await fetchResponse.json();
+
+        if (fetchData.newAccessToken) {
+            updateAccessToken((fetchData.newAccessToken));
+
+            return fetchData.allFolders;
+        }
+
+        return fetchData.allFolders;
     }
     catch (error) {
         console.error(error);

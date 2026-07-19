@@ -21,10 +21,10 @@ const Library = () => {
 
   useEffect(() => {
     if (foldersFetched.current) return;
-    foldersFetched.current = true; // set this FIRST
+    foldersFetched.current = true;
 
     (async () => {
-      const allFolders = await getAllFolders(accessToken);
+      const allFolders = await getAllFolders(accessToken, updateAccessToken);
       setItems((prev) => [...allFolders, ...prev]);
     })();
   }, []);
