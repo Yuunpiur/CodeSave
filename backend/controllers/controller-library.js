@@ -13,3 +13,15 @@ export const getAllFoldersController = async (req, res) => {
         console.error(error);
     }
 }
+
+export const getFilesController = async (req, res) => {
+    try {
+        const { folderID } = req.params;
+        const folderFiles = await libraryServices.getFiles(folderID);
+
+        res.json(folderFiles, "allFiles");
+    }
+    catch (error) {
+        console.error(error);
+    }
+}

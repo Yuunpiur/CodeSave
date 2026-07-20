@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { getAllFolders } from "./utils/library.js";
+import { getAllFolders, getFiles } from "./utils/library.js";
 import { useAccessToken } from "./auth-page.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -193,10 +193,20 @@ const Library = () => {
           visibleItems.map((item) => (
             <div
               key={item.id}
+              id={item.id}
               className={`${pageIndex == 0 ? "folders" : "files"} flex justify-around group relative`}
-              onClick={() => {
-                if (pageIndex == 1) {
-                  navigate("/");
+              onClick={async (e) => {
+                if (pageIndex == 0) {
+                  goNext();
+
+                  // fetch the files from this folder
+                  const allFiles = await getFiles(
+                    accessToken,
+                    updateAccessToken,
+                    e.target.id,
+                  );
+
+                  setItems((prev) => [...allFiles, ...prev]);
                 }
               }}
             >
