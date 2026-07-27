@@ -1,5 +1,11 @@
-import { useState, useEffect, useRef } from "react";
-import { getAllFolders, getFiles } from "./utils/library.js";
+import { useState, useEffect, useRef, use } from "react";
+import {
+  addFolder,
+  getAllFolders,
+  getFiles,
+  addFile,
+} from "./utils/library.js";
+import { filterFolders } from "./utils/client-utils.js";
 import { useAccessToken } from "./auth-page.jsx";
 import { useNavigate } from "react-router-dom";
 
@@ -9,14 +15,14 @@ const Library = () => {
   const navigate = useNavigate();
   const accessToken = useAccessToken((state) => state.accessToken);
   const updateAccessToken = useAccessToken((state) => state.updateAccessToken);
-
   const [pageIndex, setPageIndex] = useState(0);
   const [direction, setDirection] = useState(1);
   const [animKey, setAnimKey] = useState(0);
   const [showAddPopup, setShowAddPopup] = useState(false);
   const [folderName, setFolderName] = useState("");
   const [items, setItems] = useState([]);
-
+  const [folderIsPressed, setFolderIsPressed] = useState(false);
+  const [currentFolderID, setCurrentFolderID] = useState("");
   const foldersFetched = useRef(false);
 
   useEffect(() => {
@@ -65,6 +71,26 @@ const Library = () => {
     setItems((prev) => [newItem, ...prev]);
     setFolderName("");
     setShowAddPopup(false);
+
+    // add the folder/file to the db
+
+    // if pageIndex == 0
+    // addFolder function
+    // -> accessToken updateAccessToken newItem
+
+    if (pageIndex == 0) {
+      addFolder(accessToken, updateAccessToken, newItem);
+    }
+
+    if (pageIndex == 1) {
+      newItem.folderID = currentFolderID;
+      console.log(newItem);
+      addFile(accessToken, updateAccessToken, newItem);
+    }
+
+    // if pageIndex == 1
+    // addFile function
+    // -> accessToken updateAccessToken newItem
   };
 
   // only show items that match the current page type
@@ -123,7 +149,7 @@ const Library = () => {
           CodeSave
         </div>
       </div>
-
+      {/* PREV AND NEXT BUTTONS */}
       <div className="mx-10 mt-15 mb-2 flex items-center justify-between">
         <div className="previous-and-next-group flex">
           <div
@@ -140,9 +166,14 @@ const Library = () => {
               <path d="M400-80 0-480l400-400 71 71-329 329 329 329-71 71Z" />
             </svg>
           </div>
-          <div
+          <button
             onClick={goNext}
-            className="next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
+            disabled={!folderIsPressed}
+            className={
+              folderIsPressed
+                ? "next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
+                : "next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between"
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -153,7 +184,7 @@ const Library = () => {
             >
               <path d="m321-80-71-71 329-329-329-329 71-71 400 400L321-80Z" />
             </svg>
-          </div>
+          </button>
         </div>
 
         <div
@@ -206,7 +237,10 @@ const Library = () => {
                     e.target.id,
                   );
 
-                  setItems((prev) => [...allFiles, ...prev]);
+                  setItems((prev) => [...allFiles, ...filterFolders(items)]);
+                  setFolderIsPressed(true);
+                  console.log(item.id);
+                  setCurrentFolderID(item.id);
                 }
               }}
             >

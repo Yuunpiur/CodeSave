@@ -5,5 +5,7 @@ import * as libraryControllers from "../controllers/controller-library.js";
 
 router.get('/get-all-folders', libraryControllers.getAllFoldersController);
 router.get('/get-all-files/:folderID', libraryControllers.getFilesController);
+router.post('/add-folder', libraryControllers.addFolder);
+router.post('/add-file', libraryControllers.addFile);
 
 export default router;

@@ -3,13 +3,19 @@ const attachNewAccessToken = (req, res, next) => {
 
     // overwrite res.json
     // this is executed when res.json is called 
-    res.json = (body, dataName) => {
+    res.json = ({ body, dataName, message }) => {
+        if (message) {
+            body = { message: message }
+        }
+        else if (dataName && body) {
+            body = { [dataName]: body };
+        }
+
+
         if (res.locals.newAccessToken) {
-            body = { [dataName]: body, newAccessToken: res.locals.newAccessToken };
+            body.newAccessToken = res.locals.newAccessToken
         }
-        else {
-            body = { [dataName]: body }
-        }
+
 
         return originalJson(body);
     };

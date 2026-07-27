@@ -61,3 +61,18 @@ export const disableButtonForTenSeconds = (setSaveVersionButtonDisabled) => {
 };
 
 
+export const filterFolders = (items) => {
+    const allFolders = [];
+
+    for (let i = 0; i < items.length; i++) {
+        if (items[i].type == "folder") {
+            allFolders.push(items[i]);
+        }
+
+    }
+
+    return allFolders;
+
+};
+
+

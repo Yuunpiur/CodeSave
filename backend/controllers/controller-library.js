@@ -7,7 +7,7 @@ export const getAllFoldersController = async (req, res) => {
         console.log(username);
         const allFolders = await libraryServices.getAllFolders(username);
 
-        res.json(allFolders, "allFolders");
+        res.json({ body: allFolders, dataName: "allFolders" });
     }
     catch (error) {
         console.error(error);
@@ -19,7 +19,34 @@ export const getFilesController = async (req, res) => {
         const { folderID } = req.params;
         const folderFiles = await libraryServices.getFiles(folderID);
 
-        res.json(folderFiles, "allFiles");
+        res.json({ body: folderFiles, dataName: "allFiles" });
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+export const addFolder = async (req, res) => {
+    try {
+        const { folderInfo } = req.body;
+        const username = getUsername(req.cookies.refreshToken);
+        await libraryServices.addFolder(folderInfo, username);
+
+
+        res.json({ message: "folder added successfully!" });
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+export const addFile = async (req, res) => {
+    try {
+        const { fileInfo } = req.body;
+        const username = getUsername(req.cookies.refreshToken);
+        await libraryServices.addFile(fileInfo, username);
+
+        res.json({ message: "file added successfully!" });
     }
     catch (error) {
         console.error(error);
