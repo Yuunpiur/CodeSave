@@ -154,7 +154,11 @@ const Library = () => {
         <div className="previous-and-next-group flex">
           <div
             onClick={goPrev}
-            className="previous-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between me-5 cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
+            className={
+              pageIndex == 0
+                ? "previous-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between me-5"
+                : "previous-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between me-5 cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
+            }
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -170,9 +174,9 @@ const Library = () => {
             onClick={goNext}
             disabled={!folderIsPressed}
             className={
-              folderIsPressed
-                ? "next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
-                : "next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between"
+              !folderIsPressed || pageIndex == 1
+                ? "next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between"
+                : "next-button p-3 w-10 h-10 bg-[#dcdcdc]/30 border border-[#b5b5b5] flex items-center justify-between cursor-pointer hover:border-[#dcdcdc]/20 transition-all duration-150"
             }
           >
             <svg
