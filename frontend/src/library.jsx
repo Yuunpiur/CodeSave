@@ -237,7 +237,12 @@ const Library = () => {
                     e.target.id,
                   );
 
-                  setItems((prev) => [...allFiles, ...filterFolders(items)]);
+                  if (allFiles) {
+                    setItems((prev) => [...allFiles, ...filterFolders(items)]);
+                  } else {
+                    setItems((prev) => [...filterFolders(items)]);
+                  }
+
                   setFolderIsPressed(true);
                   console.log(item.id);
                   setCurrentFolderID(item.id);
@@ -255,10 +260,16 @@ const Library = () => {
                 ✕
               </button>
 
-              <div className="text-[#252525] font-noto text-[17px] tracking-wide mb-15">
+              <div
+                className="text-[#252525] font-noto text-[17px] tracking-wide mb-15"
+                id={item.id}
+              >
                 {item.name}
               </div>
-              <div className="text-[#575757] font-noto text-[11px] tracking-[0.14em] uppercase">
+              <div
+                className="text-[#575757] font-noto text-[11px] tracking-[0.14em] uppercase"
+                id={item.id}
+              >
                 {item.createdat}
               </div>
             </div>

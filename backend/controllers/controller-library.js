@@ -26,7 +26,7 @@ export const getFilesController = async (req, res) => {
     }
 }
 
-export const addFolder = async (req, res) => {
+export const addFolderController = async (req, res) => {
     try {
         const { folderInfo } = req.body;
         const username = getUsername(req.cookies.refreshToken);
@@ -40,7 +40,7 @@ export const addFolder = async (req, res) => {
     }
 }
 
-export const addFile = async (req, res) => {
+export const addFileController = async (req, res) => {
     try {
         const { fileInfo } = req.body;
         const username = getUsername(req.cookies.refreshToken);

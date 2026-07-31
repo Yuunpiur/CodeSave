@@ -30,6 +30,7 @@ export const getAllFolders = async (accessToken, updateAccessToken) => {
 
 
 export const getFiles = async (accessToken, updateAccessToken, folderID) => {
+    console.log("folder ID", folderID);
     try {
         const requestOptions = {
             method: "GET",
@@ -46,6 +47,7 @@ export const getFiles = async (accessToken, updateAccessToken, folderID) => {
             requestOptions
         );
 
+
         const fetchData = await fetchResponse.json();
 
         if (fetchData.newAccessToken) {
@@ -58,7 +60,7 @@ export const getFiles = async (accessToken, updateAccessToken, folderID) => {
         return fetchData.allFiles;
     }
     catch (error) {
-        console.error(error);
+        console.error("thizzy", error);
     }
 };
 
