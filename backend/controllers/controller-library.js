@@ -52,3 +52,27 @@ export const addFileController = async (req, res) => {
         console.error(error);
     }
 }
+
+export const deleteFileController = async (req, res) => {
+    try {
+        const { snippetID } = req.body;
+        await libraryServices.deleteFile(snippetID);
+
+        res.json({ message: "file deleted successfully!" });
+    }
+    catch (error) {
+        console.error(error);
+    }
+}
+
+export const deleteFolderController = async (req, res) => {
+    try {
+        const { folderID } = req.body;
+        await libraryServices.deleteFolder(folderID);
+
+        res.json({ message: "folder deleted successfully!" });
+    }
+    catch (error) {
+        console.error(error);
+    }
+}

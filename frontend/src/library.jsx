@@ -4,6 +4,8 @@ import {
   getAllFolders,
   getFiles,
   addFile,
+  deleteFile,
+  deleteFolder,
 } from "./utils/library.js";
 import { filterFolders } from "./utils/client-utils.js";
 import { useAccessToken } from "./auth-page.jsx";
@@ -24,6 +26,7 @@ const Library = () => {
   const [folderIsPressed, setFolderIsPressed] = useState(false);
   const [currentFolderID, setCurrentFolderID] = useState("");
   const foldersFetched = useRef(false);
+  const [deleteTarget, setDeleteTarget] = useState(null);
 
   useEffect(() => {
     if (foldersFetched.current) return;
@@ -97,6 +100,20 @@ const Library = () => {
   const visibleItems = items.filter((item) =>
     pageIndex === 0 ? item.type === "folder" : item.type === "file",
   );
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+
+    setItems((prev) => prev.filter((item) => item.id !== deleteTarget.id));
+
+    if (deleteTarget.type === "folder") {
+      await deleteFolder(accessToken, updateAccessToken, deleteTarget.id);
+    } else {
+      await deleteFile(accessToken, updateAccessToken, deleteTarget.id);
+    }
+
+    setDeleteTarget(null);
+  };
 
   return (
     <div className="parent-container bg-[#FFFFFF] h-screen">
@@ -242,9 +259,9 @@ const Library = () => {
                   );
 
                   if (allFiles) {
-                    setItems((prev) => [...allFiles, ...filterFolders(items)]);
+                    setItems([...allFiles, ...filterFolders(items)]);
                   } else {
-                    setItems((prev) => [...filterFolders(items)]);
+                    setItems([...filterFolders(items)]);
                   }
 
                   setFolderIsPressed(true);
@@ -257,8 +274,8 @@ const Library = () => {
               <button
                 className="absolute top-2.5 right-2.5 w-6 h-6 rounded-md bg-transparent hover:bg-[#f55522]/15 border border-transparent hover:border-[#f55522]/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all duration-150 cursor-pointer text-[#f55522] text-[13px]"
                 onClick={(e) => {
+                  setDeleteTarget(item);
                   e.stopPropagation();
-                  setItems((prev) => prev.filter((i) => i.id !== item.id));
                 }}
               >
                 ✕
@@ -338,6 +355,45 @@ const Library = () => {
                 onClick={handleAdd}
               >
                 Create
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      {deleteTarget && (
+        <div className="w-screen h-screen absolute inset-0 flex items-center justify-center bg-[#252525]/50 backdrop-blur-sm z-1000 px-4">
+          <div className="w-full max-w-85 bg-[#FFFFFF] border border-[#000000] overflow-hidden">
+            <div className="px-5 md:px-7 pt-6 pb-5 border-b border-[#dcdcdc]/6">
+              <div className="text-[11px] tracking-[0.18em] uppercase text-[#f55522]/60 mb-1.5 font-noto">
+                CodeSave
+              </div>
+              <h2 className="text-[24px] md:text-[26px] text-[#252525] tracking-wide font-noto font-normal">
+                Delete {deleteTarget.type === "folder" ? "Folder" : "File"}
+              </h2>
+            </div>
+
+            <div className="px-5 md:px-7 pt-5 pb-6">
+              <p className="text-[13px] text-[#252525]/70 font-noto tracking-wide">
+                Are you sure you want to delete{" "}
+                <span className="font-medium text-[#252525]">
+                  {deleteTarget.name}
+                </span>
+                ? This can't be undone.
+              </p>
+            </div>
+
+            <div className="px-5 md:px-7 pb-6 flex gap-2.5">
+              <button
+                className="flex-1 bg-transparent border border-[#dcdcdc]/20 text-[#252525]/55 hover:border-[#dcdcdc]/45 hover:text-[#252525]/90 py-2.5 text-[15px] tracking-widest uppercase font-noto transition-all duration-150 cursor-pointer"
+                onClick={() => setDeleteTarget(null)}
+              >
+                Cancel
+              </button>
+              <button
+                className="flex-1 bg-[#f55522] hover:bg-[#ff7a52] border-none text-[#FFFFFF] py-2.5 text-[15px] tracking-widest uppercase font-noto font-medium transition-all duration-150 cursor-pointer"
+                onClick={handleDelete}
+              >
+                Delete
               </button>
             </div>
           </div>

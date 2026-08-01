@@ -130,4 +130,71 @@ export const addFile = async (accessToken, updateAccessToken, fileInfo) => {
     catch (error) {
         console.error(error);
     }
-}; 
+};
+
+export const deleteFile = async (accessToken, updateAccessToken, snippetID) => {
+    try {
+        const requestOptions = {
+            method: "DELETE",
+            credentials: "include",
+            body: JSON.stringify({
+                snippetID: snippetID
+            }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`
+            }
+        };
+
+        const fetchResponse = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}api/library/delete-file`,
+            requestOptions
+        );
+
+
+        const fetchData = await fetchResponse.json();
+
+        if (fetchData.newAccessToken) {
+            updateAccessToken(fetchData.newAccessToken);
+        }
+
+        return;
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
+
+
+export const deleteFolder = async (accessToken, updateAccessToken, folderID) => {
+    try {
+        const requestOptions = {
+            method: "DELETE",
+            credentials: "include",
+            body: JSON.stringify({
+                folderID: folderID
+            }),
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`
+            }
+        };
+
+        const fetchResponse = await fetch(
+            `${import.meta.env.VITE_BACKEND_URL}api/library/delete-folder`,
+            requestOptions
+        );
+
+
+        const fetchData = await fetchResponse.json();
+
+        if (fetchData.newAccessToken) {
+            updateAccessToken(fetchData.newAccessToken);
+        }
+
+        return;
+    }
+    catch (error) {
+        console.error(error);
+    }
+};

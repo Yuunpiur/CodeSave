@@ -31,8 +31,6 @@ export const getFiles = async (folderID) => {
             [folderID]);
 
 
-
-
         const allFiles = selectQueryResult.rows;
         // Format all the created_at column date times
         for (let i = 0; i < allFiles.length; i++) {
@@ -76,4 +74,16 @@ export const addFile = async (fileInfo, username) => {
         console.error(error);
     }
 }
+
+
+export const deleteFile = async (fileID) => {
+    await db.query("DELETE FROM USER_CODE_SNIPPETS WHERE snippet_id = $1", [fileID]);
+};
+
+export const deleteFolder = async (folderID) => {
+    await db.query("DELETE FROM USER_CODE_SNIPPETS WHERE folder_id = $1", [folderID]);
+    await db.query("DELETE FROM USER_FOLDERS WHERE folder_id = $1", [folderID]);
+};
+
+
 
