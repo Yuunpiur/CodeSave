@@ -91,9 +91,6 @@ const Library = () => {
       addFile(accessToken, updateAccessToken, newItem);
     }
 
-    // if pageIndex == 1
-    // addFile function
-    // -> accessToken updateAccessToken newItem
   };
 
   // only show items that match the current page type

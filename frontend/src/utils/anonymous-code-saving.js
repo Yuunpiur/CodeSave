@@ -10,7 +10,7 @@ export const addSourceCodeInfo = async (codeEditorSourceCode, programmingLanguag
         };
 
         const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/code/add-source-code-info`,
+            `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/add-source-code-info`,
             requestOptions,
         );
 
@@ -30,7 +30,7 @@ export const fetchSourceCodeInfo = async (sourceCodeInfoID) => {
             headers: { "Content-Type": "application/json" },
         };
         const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/code/fetch-source-code-info`,
+            `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/fetch-source-code-info`,
             requestOptions,
         );
         const sourceCodeInfo = await fetchResponse.json();
@@ -50,7 +50,7 @@ export const updateSourceCodeInfo = async (codeEditorSourceCode, sourceCodeInfoI
             body: JSON.stringify({ codeEditorSourceCode: codeEditorSourceCode, sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}api/code/update-source-code-info`, requestOptions);
+        await fetch(`${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/update-source-code-info`, requestOptions);
     } catch (error) {
         console.error(error);
     }
@@ -66,7 +66,7 @@ export const sourceCodeInfoIDExist = async (sourceCodeInfoID) => {
         };
 
         const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/code/check-id-exist`,
+            `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/check-id-exist`,
             requestOptions,
         );
         const { IDExist } = await fetchResponse.json();

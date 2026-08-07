@@ -19,7 +19,7 @@ app.use(cors({
 }));
 app.use(express.json());
 app.use(cookieParser()); // parsing http only cookies
-app.use("/api/code", codeInfoRouter);
+app.use("/api/anonymous-user-code", codeInfoRouter);
 app.use("/api/version", versionInfoRouter);
 app.use("/api/authenticate", authenticationRouter)
 app.use("/api/library", verifyJWT, attachNewAccessToken, libraryRouter)

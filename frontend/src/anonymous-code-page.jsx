@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import "./main.css";
-import "./drop-down-menu";
-import DropDownMenu from "./drop-down-menu";
+import "./drop-down-menu.jsx";
+import DropDownMenu from "./drop-down-menu.jsx";
 import { useEffect, useState, version } from "react";
 import Editor from "@monaco-editor/react";
 import { useParams } from "react-router-dom";
@@ -14,7 +14,7 @@ import {
   fetchSourceCodeInfo,
   updateSourceCodeInfo,
   sourceCodeInfoIDExist,
-} from "./utils/code-saving.js";
+} from "./utils/anonymous-code-saving.js";
 
 import {
   addVersionInfo,
