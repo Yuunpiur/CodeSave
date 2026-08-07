@@ -1,4 +1,4 @@
-import * as saveVersionControllers from "../controllers/controller-version-info.js";
+import * as saveVersionControllers from "../controllers/controller-registered-version-info.js";
 import express from "express";
 const router = express.Router();
 

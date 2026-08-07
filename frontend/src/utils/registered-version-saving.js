@@ -7,7 +7,7 @@ export const addVersionInfo = async (codeEditorSourceCode, versionName, sourceCo
             headers: { "Content-Type": "application/json" },
         };
 
-        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/add-version-info`, requestOptions);
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/add-version-info`, requestOptions);
 
         const versionInfo = await fetchResponse.json();
 
@@ -25,7 +25,7 @@ export const fetchVersionsDetails = async (sourceCodeInfoID) => {
             body: JSON.stringify({ sourceCodeInfoID: sourceCodeInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-versions-details`, requestOptions);
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/fetch-versions-details`, requestOptions);
         const savedVersionsDetails = await fetchResponse.json();
 
         return savedVersionsDetails;
@@ -43,7 +43,7 @@ export const fetchVersionSourceCode = async (savedVersionInfoID) => {
             body: JSON.stringify({ savedVersionInfoID: savedVersionInfoID }),
             headers: { "Content-Type": "application/json" },
         };
-        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/fetch-version-source-code`, requestOptions);
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/fetch-version-source-code`, requestOptions);
         const { versionSourceCode } = await fetchResponse.json();
 
         return versionSourceCode;
@@ -55,7 +55,7 @@ export const fetchVersionSourceCode = async (savedVersionInfoID) => {
 
 export const deleteVersion = async (versionToDeleteID) => {
     try {
-        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/version/delete-version/${versionToDeleteID}`, { method: "DELETE" });
+        const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/delete-version/${versionToDeleteID}`, { method: "DELETE" });
     }
     catch (error) {
         console.error(error);

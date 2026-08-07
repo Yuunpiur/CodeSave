@@ -1,7 +1,7 @@
 import express from "express";
 const router = express.Router();
 
-import * as saveCodeControllers from "../controllers/controller-code-info.js";
+import * as saveCodeControllers from "../controllers/controller-registered-code-info.js";
 
 router.post('/add-source-code-info', saveCodeControllers.addSourceCodeInfoController);
 router.post("/fetch-source-code-info", saveCodeControllers.fetchSourceCodeInfoController);
