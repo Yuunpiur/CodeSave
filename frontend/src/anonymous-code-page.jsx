@@ -21,7 +21,7 @@ import {
   fetchVersionsDetails,
   fetchVersionSourceCode,
   deleteVersion,
-} from "./utils/version-saving.js";
+} from "./utils/anonymous-version-saving.js";
 
 import {
   sendDataToCallBackUseStateVariable,
@@ -125,21 +125,6 @@ const CodePage = () => {
           <div className="logo font-noto text-[30px] md:text-[40px] text-[#252525] tracking-[0.18em] uppercase ">
             CodeSave
           </div>
-          {accessToken ? null : (
-            <div className="auth-button-group">
-              <button
-                onClick={() => {
-                  navigate("/login");
-                }}
-                className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 me-5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150"
-              >
-                Sign Up
-              </button>
-              <button className="font-noto text-sm text-white bg-[#252525] border border-[#252525] p-1.5 w-20 cursor-pointer hover:bg-[#ffb522] hover:border-[#ffb522] transition-all duration-150">
-                Log In
-              </button>
-            </div>
-          )}
         </div>
 
         <div className="main flex flex-col lg:flex-row justify-start lg:justify-around items-stretch p-3 md:px-4 md:pt-12 md:pb-8 h-[92%] w-full gap-3 md:gap-4 overflow-hidden">

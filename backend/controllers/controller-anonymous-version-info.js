@@ -1,4 +1,4 @@
-import * as versionInfoServices from "../services/service-version-info.js";
+import * as versionInfoServices from "../services/service-anonymous-version-info.js";
 
 export const addVersionInfoController = async (req, res) => {
     try {

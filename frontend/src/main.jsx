@@ -1,6 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import CodePage from "./code-page";
+import CodePage from "./anonymous-code-page";
 import NotFound from "./not-found";
 import Authpage from "./auth-page";
 import Library from "./library";

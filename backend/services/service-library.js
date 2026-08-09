@@ -54,9 +54,9 @@ export const getFiles = async (folderID) => {
 
 
 export const addFolder = async (folderInfo, username) => {
-    const { id, name, type } = folderInfo;
+    const { id, name: folderName } = folderInfo;
     try {
-        await db.query("INSERT INTO USER_FOLDERS (folder_id, username, folder_name, type) VALUES($1, $2, $3, $4)", [id, username, name, type]);
+        await db.query("INSERT INTO USER_FOLDERS (folder_id, username, folder_name) VALUES($1, $2, $3)", [id, username, folderName]);
     }
     catch (error) {
         console.error(error);
@@ -68,7 +68,7 @@ export const addFile = async (fileInfo, username) => {
     console.log(fileInfo);
     const { id, name, type, folderID } = fileInfo;
     try {
-        await db.query("INSERT INTO USER_CODE_SNIPPETS (snippet_id, snippet_name, type, folder_id, source_code, code_hash) VALUES($1, $2, $3, $4, $5, $6)", [id, name, type, folderID, "", ""]);
+        await db.query("INSERT INTO USER_CODE_SNIPPETS (snippet_id, snippet_name, folder_id, source_code, code_hash) VALUES($1, $2, $3, $4, $5)", [id, name, folderID, "", ""]);
     }
     catch (error) {
         console.error(error);

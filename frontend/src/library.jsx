@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef, use } from "react";
+import { nanoid } from "nanoid";
 import {
   addFolder,
   getAllFolders,
@@ -58,7 +59,7 @@ const Library = () => {
     if (folderName.trim() === "") return;
 
     const newItem = {
-      id: crypto.randomUUID(),
+      id: pageIndex === 0 ? crypto.randomUUID() : nanoid(20),
       name: folderName.trim(),
       type: pageIndex === 0 ? "folder" : "file",
       createdat: new Date().toLocaleString("en-US", {
@@ -90,7 +91,6 @@ const Library = () => {
       console.log(newItem);
       addFile(accessToken, updateAccessToken, newItem);
     }
-
   };
 
   // only show items that match the current page type
