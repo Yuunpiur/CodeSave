@@ -63,16 +63,24 @@ const CodePage = () => {
   useEffect(() => {
     if (sourceCodeInfoID != "") {
       (async () => {
-        if (await sourceCodeInfoIDExist(sourceCodeInfoID)) {
-          setCodeURL(`${import.meta.env.VITE_FRONTEND_URL}${sourceCodeInfoID}`);
-          (async () => {
-            const sourceCodeInfo = await fetchSourceCodeInfo(sourceCodeInfoID);
-            setLatestSourceCode(sourceCodeInfo.codeEditorSourceCode);
-            setCodeEditorSourceCode(sourceCodeInfo.codeEditorSourceCode);
-            setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
-          })();
-        } else {
-          navigate("/not-found");
+        try {
+          console.log(await sourceCodeInfoIDExist(sourceCodeInfoID));
+          if (await sourceCodeInfoIDExist(sourceCodeInfoID)) {
+            setCodeURL(
+              `${import.meta.env.VITE_FRONTEND_URL}${`code-page`}/${sourceCodeInfoID}`,
+            );
+            (async () => {
+              const sourceCodeInfo =
+                await fetchSourceCodeInfo(sourceCodeInfoID);
+              setLatestSourceCode(sourceCodeInfo.codeEditorSourceCode);
+              setCodeEditorSourceCode(sourceCodeInfo.codeEditorSourceCode);
+              setProgrammingLanguage(sourceCodeInfo.programmingLanguage);
+            })();
+          } else {
+            navigate("/not-found");
+          }
+        } catch (e) {
+          console.log(e);
         }
       })();
     }

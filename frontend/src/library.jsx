@@ -269,6 +269,10 @@ const Library = () => {
                   console.log(item.id);
                   setCurrentFolderID(item.id);
                 }
+
+                if (pageIndex == 1) {
+                  navigate(`/code-page/${e.target.id}`);
+                }
               }}
             >
               {/* Delete button */}

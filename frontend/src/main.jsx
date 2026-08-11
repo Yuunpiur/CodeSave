@@ -1,6 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import CodePage from "./anonymous-code-page";
+import AnonymousCodePage from "./anonymous-code-page";
+import RegisteredCodePage from "./registered-code-page";
 import NotFound from "./not-found";
 import Authpage from "./auth-page";
 import Library from "./library";
@@ -9,12 +10,18 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 const router = createBrowserRouter([
   {
     /* Route Component CodePage both for path / /:id because at the end of the day if the user has an existing source code or not, it should render the codepage page */
-    path: "/",
-    element: <CodePage />,
+    path: "/code-page/:id",
+    element: <RegisteredCodePage />,
   },
   {
+    /* Route Component CodePage both for path / /:id because at the end of the day if the user has an existing source code or not, it should render the codepage page */
+    path: "/",
+    element: <AnonymousCodePage />,
+  },
+
+  {
     path: "/:id",
-    element: <CodePage />,
+    element: <AnonymousCodePage />,
   },
   {
     path: "/login",
