@@ -26,14 +26,16 @@ const Library = () => {
   const [items, setItems] = useState([]);
   const [folderIsPressed, setFolderIsPressed] = useState(false);
   const [currentFolderID, setCurrentFolderID] = useState("");
-  const foldersFetched = useRef(false);
+  const foldersFetched = useRef(false); // prevent double fetching of the folders
   const [deleteTarget, setDeleteTarget] = useState(null);
+  const [language, setLanguage] = useState("Java");
 
   useEffect(() => {
     if (foldersFetched.current) return;
     foldersFetched.current = true;
 
     (async () => {
+      console.log(accessToken);
       const allFolders = await getAllFolders(accessToken, updateAccessToken);
       setItems((prev) => [...allFolders, ...prev]);
     })();
@@ -60,6 +62,7 @@ const Library = () => {
 
     const newItem = {
       id: pageIndex === 0 ? crypto.randomUUID() : nanoid(20),
+      language: pageIndex === 1 ? language : null,
       name: folderName.trim(),
       type: pageIndex === 0 ? "folder" : "file",
       createdat: new Date().toLocaleString("en-US", {
@@ -87,6 +90,7 @@ const Library = () => {
     }
 
     if (pageIndex == 1) {
+      console.log(language);
       newItem.folderID = currentFolderID;
       console.log(newItem);
       addFile(accessToken, updateAccessToken, newItem);
@@ -334,6 +338,27 @@ const Library = () => {
                 Give this {pageIndex === 0 ? "folder" : "file"} a meaningful
                 name
               </p>
+              {pageIndex === 1 && (
+                <div className="mt-4">
+                  <label
+                    className="block text-[11px] tracking-[0.14em] uppercase text-[#ffb522]/70 mb-2 font-noto"
+                    htmlFor="language-select"
+                  >
+                    Language
+                  </label>
+                  <select
+                    id="language-select"
+                    className="w-full bg-[#dcdcdc]/40 border border-[#000000] text-[#252525] text-sm px-3.5 py-2.5 outline-none focus:border-[#ffb522]/45 transition-colors font-noto tracking-wide cursor-pointer"
+                    value={language}
+                    onChange={(e) => setLanguage(e.target.value)}
+                  >
+                    <option value="Java">Java</option>
+                    <option value="C++">C++</option>
+                    <option value="Javascript">Javascript</option>
+                    <option value="Python">Python</option>
+                  </select>
+                </div>
+              )}
             </div>
 
             <div className="px-5 md:px-7 pb-6 flex gap-2.5">

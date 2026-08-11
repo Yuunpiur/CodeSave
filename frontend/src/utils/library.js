@@ -30,7 +30,6 @@ export const getAllFolders = async (accessToken, updateAccessToken) => {
 
 
 export const getFiles = async (accessToken, updateAccessToken, folderID) => {
-    console.log("folder ID", folderID);
     try {
         const requestOptions = {
             method: "GET",
