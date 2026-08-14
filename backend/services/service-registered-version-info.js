@@ -11,7 +11,7 @@ export const addVersionInfo = async (codeEditorSourceCode, versionName, sourceCo
         const versionHashExist = selectVersionHashResult.rows.length == 1;
         if (!versionHashExist) {
             const versionInfoID = nanoid(20);
-
+            console.log(sourceCodeInfoID);
             await db.query("INSERT INTO REGISTERED_USER_VERSIONS_INFO(ver_id, snippet_id, source_code, ver_hash, ver_name) VALUES($1, $2, $3, $4, $5)", [versionInfoID, sourceCodeInfoID, codeEditorSourceCode, versionHashedSourceCode, versionName]);
             const selectVersionInfoResult = await db.query("SELECT ver_name, ver_id, created_at FROM REGISTERED_USER_VERSIONS_INFO WHERE ver_id = $1", [versionInfoID]);
 
