@@ -5,7 +5,7 @@ export const addSourceCodeInfoController = async (req, res) => {
     try {
         const { codeEditorSourceCode, programmingLanguage } = req.body;
         const sourceCodeInfoID = await codeInfoServices.addSourceCodeInfo(codeEditorSourceCode, programmingLanguage);
-        console.log(sourceCodeInfoID);
+
         res.json({ sourceCodeInfoID: sourceCodeInfoID });
     }
     catch (error) {
