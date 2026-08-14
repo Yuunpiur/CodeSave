@@ -27,11 +27,12 @@ export const getFiles = async (folderID) => {
 
     try {
         const selectQueryResult = await db.query(
-            "SELECT snippet_id as id, folder_id, snippet_name as name, type, created_at as createdat FROM REGISTERED_USER_CODE_SNIPPETS WHERE folder_id = $1",
+            "SELECT snippet_id as id, folder_id, snippet_name as name, type, updated_at as createdat FROM REGISTERED_USER_CODE_SNIPPETS WHERE folder_id = $1",
             [folderID]);
 
 
         const allFiles = selectQueryResult.rows;
+        console.log(allFiles);
         // Format all the created_at column date times
         for (let i = 0; i < allFiles.length; i++) {
             const date = allFiles[i].createdat;
