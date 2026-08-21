@@ -9,7 +9,7 @@ import {
   deleteFolder,
 } from "./utils/library.js";
 import { filterFolders } from "./utils/client-utils.js";
-import { useAccessToken } from "./auth-page.jsx";
+import { useAccessToken } from "./utils/client-utils.js";
 import { useNavigate } from "react-router-dom";
 
 const PAGES = ["Folders", "Files"];
@@ -35,8 +35,7 @@ const Library = () => {
     foldersFetched.current = true;
 
     (async () => {
-      console.log(accessToken);
-      const allFolders = await getAllFolders(accessToken, updateAccessToken);
+      const allFolders = await getAllFolders();
       setItems((prev) => [...allFolders, ...prev]);
     })();
   }, []);
@@ -86,14 +85,13 @@ const Library = () => {
     // -> accessToken updateAccessToken newItem
 
     if (pageIndex == 0) {
-      addFolder(accessToken, updateAccessToken, newItem);
+      addFolder(newItem);
     }
 
     if (pageIndex == 1) {
       console.log(language);
       newItem.folderID = currentFolderID;
-      console.log(newItem);
-      addFile(accessToken, updateAccessToken, newItem);
+      addFile(newItem);
     }
   };
 
@@ -108,9 +106,9 @@ const Library = () => {
     setItems((prev) => prev.filter((item) => item.id !== deleteTarget.id));
 
     if (deleteTarget.type === "folder") {
-      await deleteFolder(accessToken, updateAccessToken, deleteTarget.id);
+      await deleteFolder(deleteTarget.id);
     } else {
-      await deleteFile(accessToken, updateAccessToken, deleteTarget.id);
+      await deleteFile(deleteTarget.id);
     }
 
     setDeleteTarget(null);
@@ -251,13 +249,8 @@ const Library = () => {
               onClick={async (e) => {
                 if (pageIndex == 0) {
                   goNext();
-
                   // fetch the files from this folder
-                  const allFiles = await getFiles(
-                    accessToken,
-                    updateAccessToken,
-                    e.target.id,
-                  );
+                  const allFiles = await getFiles(e.target.id);
 
                   if (allFiles) {
                     setItems([...allFiles, ...filterFolders(items)]);
@@ -266,7 +259,6 @@ const Library = () => {
                   }
 
                   setFolderIsPressed(true);
-                  console.log(item.id);
                   setCurrentFolderID(item.id);
                 }
 

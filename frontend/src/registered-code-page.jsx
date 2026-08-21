@@ -7,7 +7,7 @@ import Editor from "@monaco-editor/react";
 import { useParams } from "react-router-dom";
 import copyIcon from "./assets/IMAGES/ICONS/copy.svg";
 import checkIcon from "./assets/IMAGES/ICONS/check.svg";
-import { useAccessToken } from "./auth-page.jsx";
+import { useAccessToken } from "./utils/client-utils.js";
 
 import {
   addSourceCodeInfo,
@@ -64,7 +64,6 @@ const CodePage = () => {
     if (sourceCodeInfoID != "") {
       (async () => {
         try {
-          console.log(await sourceCodeInfoIDExist(sourceCodeInfoID));
           if (await sourceCodeInfoIDExist(sourceCodeInfoID)) {
             setCodeURL(
               `${import.meta.env.VITE_FRONTEND_URL}${`code-page`}/${sourceCodeInfoID}`,
@@ -79,9 +78,7 @@ const CodePage = () => {
           } else {
             navigate("/not-found");
           }
-        } catch (e) {
-          console.log(e);
-        }
+        } catch (e) {}
       })();
     }
   }, [sourceCodeInfoID]);

@@ -1,199 +1,63 @@
-export const getAllFolders = async (accessToken, updateAccessToken) => {
-    try {
-        const requestOptions = {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
+import { APIRequest } from "./client-utils";
 
-
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/library/get-all-folders`,
-            requestOptions
-        );
-
-        const fetchData = await fetchResponse.json();
-
-        if (fetchData.newAccessToken) {
-            updateAccessToken((fetchData.newAccessToken));
-        }
-
-        return fetchData.allFolders;
+export const getAllFolders = async () => {
+    const options = {
+        method: "GET",
+        url: `${import.meta.env.VITE_BACKEND_URL}api/library/get-all-folders`
     }
-    catch (error) {
-        console.error(error);
+    const parsedfetchData = await APIRequest(options);
+    return parsedfetchData.allFolders;
+};
+
+export const getFiles = async (folderID) => {
+    const options = {
+        method: "GET",
+        url: `${import.meta.env.VITE_BACKEND_URL}api/library/get-all-files/${folderID}`
     }
+    const parsedfetchData = await APIRequest(options);
+    return parsedfetchData.allFiles;
 };
 
 
-export const getFiles = async (accessToken, updateAccessToken, folderID) => {
-    try {
-        const requestOptions = {
-            method: "GET",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
-
-
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/library/get-all-files/${folderID}`,
-            requestOptions
-        );
-
-
-        const fetchData = await fetchResponse.json();
-
-        if (fetchData.newAccessToken) {
-            updateAccessToken(fetchData.newAccessToken);
-        }
-
-
-        console.log(fetchData.allFiles);
-
-        return fetchData.allFiles;
+export const addFolder = async (folderInfo) => {
+    const options = {
+        method: "POST",
+        body: { folderInfo: folderInfo },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/library/add-folder`
     }
-    catch (error) {
-        console.error("thizzy", error);
-    }
+    const fetchData = await APIRequest(options);
+    return;
 };
 
 
 
-export const addFolder = async (accessToken, updateAccessToken, folderInfo) => {
-    try {
-        const requestOptions = {
-            method: "POST",
-            credentials: "include",
-            body: JSON.stringify({
-                folderInfo: folderInfo
-            }),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
+export const addFile = async (fileInfo) => {
+    const options = {
+        method: "POST",
+        body: { fileInfo: fileInfo },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/library/add-file`
+    };
+    await APIRequest(options);
+    return;
+};
 
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/library/add-folder`,
-            requestOptions
-        );
-
-        const fetchData = await fetchResponse.json();
-
-        if (fetchData.newAccessToken) {
-            updateAccessToken(fetchData.newAccessToken);
-        }
-
-        return;
+export const deleteFile = async (snippetID) => {
+    const options = {
+        method: "DELETE",
+        body: { snippetID: snippetID },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/library/delete-file`
     }
-    catch (error) {
-        console.error(error);
-    }
+    await APIRequest(options);
+    return;
 };
 
 
-
-export const addFile = async (accessToken, updateAccessToken, fileInfo) => {
-    try {
-        const requestOptions = {
-            method: "POST",
-            credentials: "include",
-            body: JSON.stringify({
-                fileInfo: fileInfo
-            }),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
-
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/library/add-file`,
-            requestOptions
-        );
-
-        const fetchData = await fetchResponse.json();
-
-        if (fetchData.newAccessToken) {
-            updateAccessToken(fetchData.newAccessToken);
-        }
-
-        return;
-    }
-    catch (error) {
-        console.error(error);
-    }
-};
-
-export const deleteFile = async (accessToken, updateAccessToken, snippetID) => {
-    try {
-        const requestOptions = {
-            method: "DELETE",
-            credentials: "include",
-            body: JSON.stringify({
-                snippetID: snippetID
-            }),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
-
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/library/delete-file`,
-            requestOptions
-        );
-
-
-        const fetchData = await fetchResponse.json();
-
-        if (fetchData.newAccessToken) {
-            updateAccessToken(fetchData.newAccessToken);
-        }
-
-        return;
-    }
-    catch (error) {
-        console.error(error);
-    }
-};
-
-
-export const deleteFolder = async (accessToken, updateAccessToken, folderID) => {
-    try {
-        const requestOptions = {
-            method: "DELETE",
-            credentials: "include",
-            body: JSON.stringify({
-                folderID: folderID
-            }),
-            headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${accessToken}`
-            }
-        };
-
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/library/delete-folder`,
-            requestOptions
-        );
-
-
-        const fetchData = await fetchResponse.json();
-
-        if (fetchData.newAccessToken) {
-            updateAccessToken(fetchData.newAccessToken);
-        }
-
-        return;
-    }
-    catch (error) {
-        console.error(error);
-    }
+export const deleteFolder = async (folderID) => {
+    const options = {
+        method: "DELETE",
+        body: { folderID: folderID },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/library/delete-folder`
+    };
+    await APIRequest(options);
+    return;
 };

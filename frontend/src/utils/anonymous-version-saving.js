@@ -8,7 +8,6 @@ export const addVersionInfo = async (codeEditorSourceCode, versionName, sourceCo
         };
 
         const fetchResponse = await fetch(`${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-version/add-version-info`, requestOptions);
-        console.log(fetchResponse.status);
         const versionInfo = await fetchResponse.json();
 
         return versionInfo;

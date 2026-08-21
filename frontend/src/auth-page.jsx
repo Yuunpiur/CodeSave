@@ -2,12 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { signUp, login } from "./utils/register";
 import "./main.css";
-import { create } from "zustand";
-
-export const useAccessToken = create((set) => ({
-  accessToken: "",
-  updateAccessToken: (accessToken) => set({ accessToken: accessToken }),
-}));
+import { useAccessToken } from "./utils/client-utils";
 
 const AuthPage = () => {
   const navigate = useNavigate();

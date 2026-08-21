@@ -32,7 +32,6 @@ const DropDownMenu = ({ sendDataToParent, programmingLanguage }) => {
                   className="w-full h-7.5 hover:bg-gray-300 cursor-pointer"
                   key={index}
                   onClick={(event) => {
-                    console.log("drop down");
                     setChosenProgrammingLanguage(event.target.innerText);
 
                     sendDataToParent(

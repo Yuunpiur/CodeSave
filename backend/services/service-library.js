@@ -6,17 +6,17 @@ export const getAllFolders = async (username) => {
             "SELECT folder_id as id, folder_name as name, type, created_at as createdAt FROM USER_FOLDERS WHERE username = $1",
             [username]);
 
-        const allFiles = selectQueryResult.rows;
+        const allFolders = selectQueryResult.rows;
         // Format all the created_at column date times
-        for (let i = 0; i < allFiles.length; i++) {
-            const date = allFiles[i].createdat;
+        for (let i = 0; i < allFolders.length; i++) {
+            const date = allFolders[i].createdat;
             const formattedDate = new Intl.DateTimeFormat("en-US", {
                 dateStyle: "medium",
                 timeStyle: "short",
             }).format(date);
-            allFiles[i].createdat = formattedDate;
+            allFolders[i].createdat = formattedDate;
         }
-        return allFiles;
+        return allFolders;
     }
     catch (error) {
         console.error(error);
@@ -24,7 +24,6 @@ export const getAllFolders = async (username) => {
 }
 
 export const getFiles = async (folderID) => {
-
     try {
         const selectQueryResult = await db.query(
             "SELECT snippet_id as id, folder_id, snippet_name as name, type, updated_at as createdat FROM REGISTERED_USER_CODE_SNIPPETS WHERE folder_id = $1",
@@ -32,7 +31,6 @@ export const getFiles = async (folderID) => {
 
 
         const allFiles = selectQueryResult.rows;
-        console.log(allFiles);
         // Format all the created_at column date times
         for (let i = 0; i < allFiles.length; i++) {
             const date = allFiles[i].createdat;
@@ -42,7 +40,7 @@ export const getFiles = async (folderID) => {
             }).format(date);
             allFiles[i].createdat = formattedDate;
         }
-        console.log(allFiles);
+
 
         return allFiles;
 
@@ -66,7 +64,7 @@ export const addFolder = async (folderInfo, username) => {
 
 export const addFile = async (fileInfo, username) => {
 
-    console.log(fileInfo);
+
     const { id, name, folderID, language } = fileInfo;
     try {
         await db.query("INSERT INTO REGISTERED_USER_CODE_SNIPPETS (snippet_id, snippet_name, folder_id, source_code, code_hash, programming_language) VALUES($1, $2, $3, $4, $5, $6)", [id, name, folderID, "", "", language]);

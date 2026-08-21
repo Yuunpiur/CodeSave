@@ -1,3 +1,5 @@
+import { create } from "zustand";
+
 // ! UPDATE PROGRAMMING LANGAUGE
 export const sendDataToCallBackUseStateVariable = (programmingLanguage, setProgrammingLanguage) => {
     setProgrammingLanguage(programmingLanguage.toLowerCase());
@@ -30,8 +32,6 @@ export const copyLink = async (copyIconPressed, setCopyIconPressed, codeURL) => 
         setCopyIconPressed(true); // prevents from clicking the button again ang again
         copyIcon.classList.toggle("hidden");
         checkIcon.classList.remove("hidden");
-
-        console.log(codeURL);
 
         // put the link to clipbaord
         const data = {
@@ -75,4 +75,75 @@ export const filterFolders = (items) => {
 
 };
 
+
+// ! ZUSTAND 
+export const useAccessToken = create((set) => ({
+    accessToken: "",
+    updateAccessToken: (accessToken) => set({ accessToken: accessToken }),
+}));
+
+
+// ! REUSABLE FUNCTION FOR FETCH AND ASSIGNING A NEW ACCESS TOKEN
+export const APIRequest = async ({ method, body, url }) => {
+    try {
+        console.log(url);
+        const accessToken = useAccessToken.getState().accessToken;
+        const requestOptions = {
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${accessToken}`
+            }
+        };
+
+        if (method) {
+            requestOptions.method = method;
+        }
+        else {
+            throw new Error("method is undefined");
+        }
+
+        if (body) {
+            console.log("get al lfolder s")
+            requestOptions.body = JSON.stringify(body);
+        }
+        if (!url) {
+            throw new Error("url is undefined");
+        }
+
+        const fetchData = await fetch(url, requestOptions);
+        const parsedFetchData = fetchData.json();
+
+        if (fetchData.newAccessToken) {
+            useAccessToken.getState().updateAccessToken(fetchData.newAccessToken);
+        }
+
+
+        return parsedFetchData;
+    }
+    catch (error) {
+        console.error(error);
+    }
+};
+
+
+export const AnonymousUserErrorHandler = (callback) => {
+    return async () => {
+        try {
+            const [key, fetchData] = await callback();
+
+            // send data to frontend if any
+            if (key) {
+                return fetchData[key];
+            }
+            else {
+                return;
+            }
+        }
+        catch (error) {
+            console.error(error);
+        }
+
+    };
+};
 
