@@ -1,4 +1,4 @@
-import { APIRequest } from "./client-utils";
+import { RegisteredUserAPIRequest } from "./client-utils";
 
 // ! TODO: Don't fetch any data from the backend, just add a version info that's it
 export const addVersionInfo = async (codeEditorSourceCode, versionName, sourceCodeInfoID, saveVersionButtonDisabled) => {
@@ -16,7 +16,7 @@ export const addVersionInfo = async (codeEditorSourceCode, versionName, sourceCo
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/add-version-info`,
     };
 
-    const versionInfo = await APIRequest(options);
+    const versionInfo = await RegisteredUserAPIRequest(options);
     return versionInfo;
 };
 
@@ -27,7 +27,7 @@ export const fetchVersionsDetails = async (sourceCodeInfoID) => {
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/fetch-versions-details`,
     };
 
-    const savedVersionsDetails = await APIRequest(options);
+    const savedVersionsDetails = await RegisteredUserAPIRequest(options);
     return savedVersionsDetails;
 };
 
@@ -38,7 +38,7 @@ export const fetchVersionSourceCode = async (savedVersionInfoID) => {
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/fetch-version-source-code`,
     };
 
-    const { versionSourceCode } = await APIRequest(options);
+    const { versionSourceCode } = await RegisteredUserAPIRequest(options);
     return versionSourceCode;
 };
 
@@ -48,6 +48,6 @@ export const deleteVersion = async (versionToDeleteID) => {
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-version/delete-version/${versionToDeleteID}`,
     };
 
-    await APIRequest(options);
+    await RegisteredUserAPIRequest(options);
     return;
 };

@@ -84,7 +84,7 @@ export const useAccessToken = create((set) => ({
 
 
 // ! REUSABLE FUNCTION FOR FETCH AND ASSIGNING A NEW ACCESS TOKEN
-export const APIRequest = async ({ method, body, url }) => {
+export const RegisteredUserAPIRequest = async ({ method, body, url }) => {
     try {
         console.log(url);
         const accessToken = useAccessToken.getState().accessToken;
@@ -104,7 +104,6 @@ export const APIRequest = async ({ method, body, url }) => {
         }
 
         if (body) {
-            console.log("get al lfolder s")
             requestOptions.body = JSON.stringify(body);
         }
         if (!url) {
@@ -127,23 +126,36 @@ export const APIRequest = async ({ method, body, url }) => {
 };
 
 
-export const AnonymousUserErrorHandler = (callback) => {
-    return async () => {
-        try {
-            const [key, fetchData] = await callback();
+export const AnonymousUserAPIRequest = async ({ method, body, url }) => {
+    try {
 
-            // send data to frontend if any
-            if (key) {
-                return fetchData[key];
+        const requestOptions = {
+            headers: {
+                "Content-Type": "application/json"
             }
-            else {
-                return;
-            }
+        };
+
+        if (method) {
+            requestOptions.method = method;
         }
-        catch (error) {
-            console.error(error);
+        else {
+            throw new Error("method is undefined");
         }
 
-    };
+        if (body) {
+            requestOptions.body = JSON.stringify(body);
+        }
+        if (!url) {
+            throw new Error("url is undefined");
+        }
+
+        const fetchData = await fetch(url, requestOptions);
+        const parsedFetchData = fetchData.json();
+
+        return parsedFetchData;
+    }
+    catch (error) {
+        console.error(error);
+    }
 };
 

@@ -1,4 +1,4 @@
-import { APIRequest } from "./client-utils";
+import { RegisteredUserAPIRequest } from "./client-utils";
 
 export const addSourceCodeInfo = async (codeEditorSourceCode, programmingLanguage) => {
     const options = {
@@ -10,7 +10,7 @@ export const addSourceCodeInfo = async (codeEditorSourceCode, programmingLanguag
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-code/add-source-code-info`,
     };
 
-    const { sourceCodeInfoID } = await APIRequest(options);
+    const { sourceCodeInfoID } = await RegisteredUserAPIRequest(options);
     return sourceCodeInfoID;
 };
 
@@ -21,7 +21,7 @@ export const fetchSourceCodeInfo = async (sourceCodeInfoID) => {
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-code/fetch-source-code-info`,
     };
 
-    const sourceCodeInfo = await APIRequest(options);
+    const sourceCodeInfo = await RegisteredUserAPIRequest(options);
     return sourceCodeInfo;
 };
 
@@ -35,7 +35,7 @@ export const updateSourceCodeInfo = async (codeEditorSourceCode, sourceCodeInfoI
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-code/update-source-code-info`,
     };
 
-    await APIRequest(options);
+    await RegisteredUserAPIRequest(options);
     return;
 };
 
@@ -46,7 +46,7 @@ export const sourceCodeInfoIDExist = async (sourceCodeInfoID) => {
         url: `${import.meta.env.VITE_BACKEND_URL}api/registered-user-code/check-id-exist`,
     };
 
-    const { IDExist } = await APIRequest(options);
+    const { IDExist } = await RegisteredUserAPIRequest(options);
     return IDExist;
 };
 

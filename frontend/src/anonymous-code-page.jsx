@@ -57,6 +57,13 @@ const CodePage = () => {
     readOnly: codeEditorReadOnly,
   };
 
+  window.addEventListener("beforeunload", (event) => {
+    if (sourceCodeInfoID) {
+      event.preventDefault();
+      event.returnValue = "";
+    }
+  });
+
   useEffect(() => {
     if (sourceCodeInfoID != "") {
       (async () => {

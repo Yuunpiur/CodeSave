@@ -1,81 +1,54 @@
+import { AnonymousUserAPIRequest } from "./client-utils";
+
 export const addSourceCodeInfo = async (codeEditorSourceCode, programmingLanguage) => {
-    try {
-        const requestOptions = {
-            method: "POST",
-            body: JSON.stringify({
-                codeEditorSourceCode: codeEditorSourceCode,
-                programmingLanguage: programmingLanguage,
-            }),
-            headers: { "Content-Type": "application/json" },
-        };
+    const options = {
+        method: "POST",
+        body: {
+            codeEditorSourceCode: codeEditorSourceCode,
+            programmingLanguage: programmingLanguage,
+        },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/add-source-code-info`,
+    };
 
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/add-source-code-info`,
-            requestOptions,
-        );
-
-        const { sourceCodeInfoID } = await fetchResponse.json();
-        return sourceCodeInfoID;
-    } catch (error) {
-        console.error(error);
-    }
+    const { sourceCodeInfoID } = await AnonymousUserAPIRequest(options);
+    return sourceCodeInfoID;
 };
 
-// !
 export const fetchSourceCodeInfo = async (sourceCodeInfoID) => {
-    try {
-        const requestOptions = {
-            method: "POST",
-            body: JSON.stringify({ sourceCodeInfoID: sourceCodeInfoID }),
-            headers: { "Content-Type": "application/json" },
-        };
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/fetch-source-code-info`,
-            requestOptions,
-        );
-        const sourceCodeInfo = await fetchResponse.json();
-        return sourceCodeInfo;
+    const options = {
+        method: "POST",
+        body: { sourceCodeInfoID: sourceCodeInfoID },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/fetch-source-code-info`,
+    };
 
-
-    } catch (error) {
-        console.error(error);
-    }
+    const sourceCodeInfo = await AnonymousUserAPIRequest(options);
+    return sourceCodeInfo;
 };
 
-// !
 export const updateSourceCodeInfo = async (codeEditorSourceCode, sourceCodeInfoID) => {
-    try {
-        const requestOptions = {
-            method: "PUT",
-            body: JSON.stringify({ codeEditorSourceCode: codeEditorSourceCode, sourceCodeInfoID: sourceCodeInfoID }),
-            headers: { "Content-Type": "application/json" },
-        };
-        await fetch(`${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/update-source-code-info`, requestOptions);
-    } catch (error) {
-        console.error(error);
-    }
-};
+    const options = {
+        method: "PUT",
+        body: {
+            codeEditorSourceCode: codeEditorSourceCode,
+            sourceCodeInfoID: sourceCodeInfoID,
+        },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/update-source-code-info`,
+    };
 
+    await AnonymousUserAPIRequest(options);
+    return;
+};
 
 export const sourceCodeInfoIDExist = async (sourceCodeInfoID) => {
-    try {
-        const requestOptions = {
-            method: "POST",
-            body: JSON.stringify({ sourceCodeInfoID: sourceCodeInfoID }),
-            headers: { "Content-Type": "application/json" },
-        };
+    const options = {
+        method: "POST",
+        body: { sourceCodeInfoID: sourceCodeInfoID },
+        url: `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/check-id-exist`,
+    };
 
-        const fetchResponse = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}api/anonymous-user-code/check-id-exist`,
-            requestOptions,
-        );
-        const { IDExist } = await fetchResponse.json();
-        return IDExist;
-    }
-    catch (error) {
-        console.error(error);
-    }
-}
+    const { IDExist } = await AnonymousUserAPIRequest(options);
+    return IDExist;
+};
 
 
 
