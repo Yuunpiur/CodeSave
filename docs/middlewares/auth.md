@@ -1,48 +1,68 @@
 ## Auth Overview
 
-CodeSave uses a two-token JWT scheme: a short-lived **access token** and a longer-lived **refresh token**. The access token proves who you are on each request; the refresh token is what lets you get a new access token without logging in again once the old one expires.
+CodeSave uses a two-token JWT authentication scheme: a short-lived **access token** and a longer-lived **refresh token**. This pattern avoids two bad extremes — making users log in constantly (if tokens are too short-lived with no renewal) or leaving a single long-lived token exposed to theft for too long.
+
+The access token is what proves identity on each API call, and the refresh token exists purely to reissue access tokens without forcing a full re-login.
 
 ## Access Token vs Refresh Token
 
-- **Access Token** — lives 15 minutes, signed with `JWT_ACCESS_SECRET`. Sent by the client on every protected request as an `Authorization: Bearer <token>` header. Stored client-side in memory (Zustand store `useAccessToken`), not persisted — this is intentional, it disappears on page refresh.
-- **Refresh Token** — lives 7 days, signed with `JWT_REFRESH_SECRET`. Stored server-side as an httpOnly cookie, so JS on the client can't read it. Its only job is to prove "this browser session is still valid" and mint new access tokens.
+|                    | Access Token                                | Refresh Token                       |
+| ------------------ | ------------------------------------------- | ----------------------------------- |
+| Lifespan           | 15 minutes                                  | 7 days                              |
+| Secret             | `JWT_ACCESS_SECRET`                         | `JWT_REFRESH_SECRET`                |
+| Sent via           | `Authorization: Bearer <token>` header      | httpOnly cookie                     |
+| Stored client-side | In memory (Zustand store, `useAccessToken`) | Not accessible to JS at all         |
+| Purpose            | Authorizes each request                     | Used only to mint new access tokens |
 
-Both tokens carry the same payload shape: `{ username, role: "user" }`.
+Both tokens carry the same payload: `{ username, role: "user" }`.
 
-## Where Tokens Get Created
+Storing the access token in memory (not localStorage) means it's wiped on page refresh — this is a deliberate tradeoff for security over convenience. The refresh token, by contrast, persists via the cookie so the user doesn't have to log in again within the 7-day window.
 
-Both `signUp` and `login` (in `service-authenticate.js`) generate the pair right after a successful account creation or password check, using the shared `generateJWT(username, expiry, secret)` helper. The controller (`controller-authenticate.js`) then:
+## Where Tokens Are Created
 
-- Sets the refresh token as a cookie via `res.cookie(...)`
-- Returns the access token in the JSON body
+Token generation happens in two places that mirror each other: `signUp` and `login`, both in `service-authenticate.js`. After a successful account creation or password check, both call the shared helper:
 
-One thing worth noting for future-you: `signUpController` sets the refresh cookie with `httpOnly: false`, while `loginController` sets it with `httpOnly: true`. That's inconsistent — worth deciding which one is actually correct and fixing the other, since `httpOnly: false` on signup defeats the purpose of keeping the refresh token out of reach of JS.
+```
+generateJWT(username, expiry, secret)
+```
 
-## Verifying Requests (`verifyJWT` middleware)
+The corresponding controllers (`controller-authenticate.js`) then:
 
-This runs on protected routes (currently just `/api/library`). The flow:
+- Attach the refresh token as a cookie via `res.cookie(...)`
+- Return the access token in the JSON response body
 
-1. Read the refresh token from the cookie, verify it. If invalid/missing → 401, user is effectively logged out.
-2. Read the access token from the `Authorization` header, verify it.
-3. If the access token fails verification (i.e., it's expired), a **new** access token is silently generated from the refresh token's payload and stashed in `res.locals.newAccessToken`. The request is still allowed to continue (`next()`).
+**Contributor note:** `signUpController` currently sets the refresh cookie with `httpOnly: false`, while `loginController` uses `httpOnly: true`. This is inconsistent and likely a bug — `httpOnly: false` means client-side JS can read the refresh token, which defeats its purpose. Anyone touching this file should align both to `httpOnly: true` unless there's a specific reason not to.
 
-So expired access tokens don't reject the request — they just trigger a quiet renewal alongside it, as long as the refresh token is still good.
+## Verifying Requests — `verifyJWT` Middleware
 
-## Getting the New Token Back to the Client (`attachNewAccessToken`)
+Located in `middlewares/verifiy-jwt.js` (note: filename has a typo — `verifiy`, not `verify`). Applied to protected routes (currently only `/api/library`).
 
-This is the second piece of middleware, chained after `verifyJWT`. It overrides `res.json` for the rest of the request so that if `res.locals.newAccessToken` was set, it gets merged into whatever JSON payload the route handler sends back — under a `newAccessToken` key.
+Flow, step by step:
 
-This is how the client silently gets refreshed without a dedicated "/refresh" endpoint: any authenticated API call doubles as a chance to renew.
+1. Read the refresh token cookie and verify it. If missing or invalid, respond `401` immediately — this effectively logs the user out.
+2. Read the access token from the `Authorization` header and verify it.
+3. If the access token is invalid (most commonly: expired), a new one is silently generated using the username from the already-verified refresh token, and stored in `res.locals.newAccessToken`.
+4. Either way, `next()` is called — an expired access token doesn't block the request outright, as long as the refresh token is still valid.
+
+## Delivering the Renewed Token — `attachNewAccessToken` Middleware
+
+Chained immediately after `verifyJWT` (see `server.js`). It works by monkey-patching `res.json` for the duration of the request: if `res.locals.newAccessToken` was set upstream, it gets merged into the outgoing JSON body under a `newAccessToken` key.
+
+This is the mechanism that lets renewal happen silently — there's no separate `/refresh` endpoint. Any authenticated request can double as a renewal opportunity.
 
 ## Client-Side Handling
 
-`RegisteredUserAPIRequest` (in `client-utils.js`) is the fetch wrapper for authenticated calls. It attaches the access token from the Zustand store as the Authorization header, and after the response comes back, checks `fetchData.newAccessToken` to update the store.
+`RegisteredUserAPIRequest`, in `frontend/src/utils/client-utils.js`, is the fetch wrapper used for all authenticated calls. Responsibilities:
 
-Worth flagging for future-you: that check is reading `fetchData.newAccessToken` off the raw `Response` object, before `.json()` has been awaited — so as written it's checking a field that doesn't exist there. This likely needs to check the _parsed_ body instead, which would explain why silent renewal probably isn't actually working yet.
+- Attaches the current access token (read from the Zustand store) as the `Authorization` header
+- After the response returns, checks for a renewed token and updates the store
 
-## Known Gaps / TODOs
+**Contributor note — likely bug:** the current check reads `fetchData.newAccessToken` off the raw `fetch` `Response` object, before `.json()` is awaited. That field won't exist there — it only exists in the _parsed_ body. As written, silent token renewal on the client probably isn't actually functioning. Whoever picks this up should move that check to after parsing the response.
 
-- `httpOnly` inconsistency between signup and login cookie settings (see above)
-- `newAccessToken` check in `client-utils.js` looks like it's checking the wrong object (raw response vs. parsed JSON)
-- No logout mechanism yet (no cookie-clearing route)
-- No CSRF protection mentioned — since the refresh token lives in a cookie, this may be worth revisiting once things are added
+## Known Gaps / Open Items
+
+- `httpOnly` cookie setting inconsistency (signup vs. login)
+- Broken `newAccessToken` check on the client (reading from the wrong object)
+- No logout route yet — nothing clears the refresh cookie
+- No CSRF protection — since the refresh token lives in a cookie, this becomes more relevant once mutating routes grow
+- Filename typo: `verifiy-jwt.js`
