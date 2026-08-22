@@ -1,7 +1,3 @@
-Got it — here's the content for `docs/middlewares/auth.md`, written for future-you, in digestible sections. Since I can't write directly to your filesystem, copy this in yourself.
-
----
-
 ## Auth Overview
 
 CodeSave uses a two-token JWT scheme: a short-lived **access token** and a longer-lived **refresh token**. The access token proves who you are on each request; the refresh token is what lets you get a new access token without logging in again once the old one expires.
