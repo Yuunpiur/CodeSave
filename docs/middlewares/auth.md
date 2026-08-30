@@ -31,8 +31,6 @@ The corresponding controllers (`controller-authenticate.js`) then:
 - Attach the refresh token as a cookie via `res.cookie(...)`
 - Return the access token in the JSON response body
 
-**Contributor note:** `signUpController` currently sets the refresh cookie with `httpOnly: false`, while `loginController` uses `httpOnly: true`. This is inconsistent and likely a bug — `httpOnly: false` means client-side JS can read the refresh token, which defeats its purpose. Anyone touching this file should align both to `httpOnly: true` unless there's a specific reason not to.
-
 ## Verifying Requests — `verifyJWT` Middleware
 
 Located in `middlewares/verifiy-jwt.js` (note: filename has a typo — `verifiy`, not `verify`). Applied to protected routes (currently only `/api/library`).
@@ -61,7 +59,6 @@ This is the mechanism that lets renewal happen silently — there's no separate 
 
 ## Known Gaps / Open Items
 
-- `httpOnly` cookie setting inconsistency (signup vs. login)
 - Broken `newAccessToken` check on the client (reading from the wrong object)
 - No logout route yet — nothing clears the refresh cookie
 - No CSRF protection — since the refresh token lives in a cookie, this becomes more relevant once mutating routes grow
