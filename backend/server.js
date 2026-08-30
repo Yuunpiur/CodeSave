@@ -4,13 +4,12 @@ import anonymousCodeInfoRouter from "./routes/route-anonymous-code-info.js";
 import anonymousVersionInfoRouter from "./routes/route-anonymous-version-info.js";
 import registeredCodeInfoRouter from "./routes/route-registered-code-info.js";
 import registeredVersionInfoRouter from "./routes/route-registered-version-info.js";
-import generateJWT from "./utils/generate-jwt.js";
 import authenticationRouter from "./routes/route-authenticate.js"
 import libraryRouter from "./routes/route-library.js"
 import cookieParser from "cookie-parser";
-import verifyJWT from "./middlewares/verifiy-jwt.js";
+import verifyJWT from "./middlewares/verify-jwt.js";
 import attachNewAccessToken from "./middlewares/attach-new-access-token.js";
-import { getAllFolders } from "./services/service-library.js";
+
 
 export const app = express();
 app.use(cors({
