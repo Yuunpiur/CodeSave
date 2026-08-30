@@ -111,10 +111,10 @@ export const RegisteredUserAPIRequest = async ({ method, body, url }) => {
         }
 
         const fetchData = await fetch(url, requestOptions);
-        const parsedFetchData = fetchData.json();
+        const parsedFetchData = await fetchData.json();
 
         if (parsedFetchData.newAccessToken) {
-            useAccessToken.getState().updateAccessToken(fetchData.newAccessToken);
+            useAccessToken.getState().updateAccessToken(parsedFetchData.newAccessToken);
         }
 
 
