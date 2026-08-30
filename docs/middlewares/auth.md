@@ -44,7 +44,7 @@ Flow, step by step:
 
 ## Delivering the Renewed Token — `attachNewAccessToken` Middleware
 
-Chained immediately after `verifyJWT` (see `server.js`). It works by monkey-patching `res.json` for the duration of the request: if `res.locals.newAccessToken` was set upstream, it gets merged into the outgoing JSON body under a `newAccessToken` key.
+Chained immediately after `verifyJWT` (see `server.js`). It works by overwriting `res.json` for the duration of the request: if `res.locals.newAccessToken` was set upstream, it gets merged into the outgoing JSON body under a `newAccessToken` key.
 
 This is the mechanism that lets renewal happen silently — there's no separate `/refresh` endpoint. Any authenticated request can double as a renewal opportunity.
 
@@ -54,12 +54,3 @@ This is the mechanism that lets renewal happen silently — there's no separate 
 
 - Attaches the current access token (read from the Zustand store) as the `Authorization` header
 - After the response returns, checks for a renewed token and updates the store
-
-**Contributor note — likely bug:** the current check reads `fetchData.newAccessToken` off the raw `fetch` `Response` object, before `.json()` is awaited. That field won't exist there — it only exists in the _parsed_ body. As written, silent token renewal on the client probably isn't actually functioning. Whoever picks this up should move that check to after parsing the response.
-
-## Known Gaps / Open Items
-
-- Broken `newAccessToken` check on the client (reading from the wrong object)
-- No logout route yet — nothing clears the refresh cookie
-- No CSRF protection — since the refresh token lives in a cookie, this becomes more relevant once mutating routes grow
-- Filename typo: `verifiy-jwt.js`
